@@ -4,24 +4,13 @@ using Taskr.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1️⃣ Add EF Core (choose your provider – SQLite works well for a demo)
 builder.Services.AddDbContext<KanbanDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("KanbanDb")));
 
 // 2️⃣ Register Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-    {
-        // optional: tweak password rules, lockout, etc.
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireLowercase = false;
-    })
-    .AddEntityFrameworkStores<KanbanDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<KanbanDbContext>();
 
-// 3️⃣ Add MVC (or Razor Pages) after Identity so it can use the auth services
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -43,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Board}/{action=Index}/{id?}");
 
 app.Run();
