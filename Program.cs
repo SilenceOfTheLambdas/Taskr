@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1️⃣ Add EF Core (choose your provider – SQLite works well for a demo)
 builder.Services.AddDbContext<KanbanDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("KanbanDb")));
 
 // 2️⃣ Register Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
