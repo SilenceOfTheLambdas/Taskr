@@ -4,11 +4,12 @@
 
 <html lang="en-GB">
 <head>
-    <title>Kanban Board</title>
+    <title>Taskr - @Model.Title</title>
 </head>
 <body>
-    <div>
-          <partial name="_ViewBoard" model="Model" />
+    <header>@Model.Title</header>
+    <div class="container-fluid">
+        <partial name="_ViewBoard" model="Model"/>
     </div>
 </body>
 </html>

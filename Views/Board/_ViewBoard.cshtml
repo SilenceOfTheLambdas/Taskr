@@ -1,5 +1,23 @@
 @model Board
 
-<div>
-    
+<div class="row flex-row">
+
+    @foreach (Swimlane swimlane in Model.Swimlanes)
+    {
+        <div class="col flex-column border border-dark-subtle rounded" style="margin: 1rem">
+            <h2 class="mb-3">@swimlane.Name</h2>
+            <div class="d-flex flex-column gap-2 mb-3">
+                @foreach (Card card in swimlane.Cards)
+                {
+                    <div class="p-2 bg-light-subtle border border-dark-subtle rounded">
+                        <div class="fw-bold">@card.Title</div>
+                        <div class="small text-muted">@card.Description</div>
+                    </div>
+                }
+            </div>
+            <div class="container p-0">
+                <button class="btn btn-sm btn-outline-primary w-100">New Card</button>
+            </div>
+        </div>
+    }
 </div>
