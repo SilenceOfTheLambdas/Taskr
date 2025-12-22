@@ -45,5 +45,5 @@
    ```bash
    dotnet run
    ```
-   The application will be available at `https://localhost:5001` or `http://localhost:5000`.
+   The application will be available at `https://localhost:7060` or `http://localhost:5176`.
 
