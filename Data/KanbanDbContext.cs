@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Models;
+using Taskr.Models.User;
 
 namespace Taskr.Data;
 
-public class KanbanDbContext : IdentityDbContext<IdentityUser>
+public class KanbanDbContext : IdentityDbContext<AppUser>
 {
     public KanbanDbContext(DbContextOptions<KanbanDbContext> options) : base(options) {}
     
@@ -16,6 +17,13 @@ public class KanbanDbContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<AppUser>()
+            .HasOne(u => u.Board)
+            .WithOne(b => b.Owner)
+            .HasForeignKey<Board>(b => b.OwnerId)
+            .IsRequired(true)
+            .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.Entity<Swimlane>()
             .HasOne(s => s.Board)

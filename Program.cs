@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Data;
+using Taskr.Models.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddDbContext<KanbanDbContext>(options =>
     options.UseSqlite(connectionString));
 
 // Setup ASP.Net Identity system
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     {
         // ---- Password policy (feel free to relax for a demo) ----
         options.Password.RequireDigit = false;
