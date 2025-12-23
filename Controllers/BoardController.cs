@@ -1,24 +1,27 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Taskr.Data;
+using Taskr.Services;
 
 namespace Taskr.Controllers;
 
-public class BoardController(KanbanDbContext context) : Controller
+[Authorize]
+public class BoardController : Controller
 {
+    private readonly BoardService _boardService;
+    private readonly KanbanDbContext _context;
+
+    public BoardController(BoardService boardService, KanbanDbContext context)
+    {
+        _boardService = boardService;
+        _context = context;
+    }
+    
     // GET: Index (Shows Kanban Board)
-    [Authorize]
     public async Task<IActionResult> Index()
     {
-        var board = await context.Boards
-            .Include(b => b.Swimlanes)
-            .ThenInclude(s => s.Cards)
-            .FirstOrDefaultAsync();
-        if (board == null)
-        {
-            return NotFound("No boards found. Please create one!");
-        }
+        var board = await _boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        if (board == null) return Challenge();
         return View(board);
     }
 

@@ -1,50 +1,92 @@
-﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Taskr.Controllers;
+using Taskr.Models.User;
+using Moq;
 using Taskr.Data;
-using Taskr.Models;
-using Xunit;
+using Taskr.Services;
 
 namespace Taskr.KanbanBoard.Tests;
 
-public class BoardControllerTests
+public class BoardServiceTests
 {
-    private KanbanDbContext GetInMemoryContext()
+    // Create a mock user manager that always returns the supplied user
+    private static UserManager<AppUser> MockUserManager(AppUser user)
+    {
+        var store = new Mock<IUserStore<AppUser>>();
+        var mgr = new Mock<UserManager<AppUser>>(
+            store.Object,
+            null, null, null, null, null, null, null, null);
+
+        // GetUserAsync is called with the HttpContext's ClaimsPrincipal.
+        // We'll make it ignore the principal and always return the supplied user.
+        mgr.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+            .ReturnsAsync(user);
+
+        return mgr.Object;
+    }
+
+    private static IHttpContextAccessor MockHttpContextAccessor()
+    {
+        var httpContext = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(new ClaimsIdentity()) // empty identity – fine for the mock
+        };
+
+        var accessorMock = new Mock<IHttpContextAccessor>();
+        accessorMock.Setup(a => a.HttpContext).Returns(httpContext);
+        return accessorMock.Object;
+    }
+
+    // Helper to spin up an in‑memory DbContext
+    private static KanbanDbContext CreateInMemoryDb()
     {
         var options = new DbContextOptionsBuilder<KanbanDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // fresh DB per test
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()) // fresh DB per test
             .Options;
 
         var ctx = new KanbanDbContext(options);
-
-        // Seed minimal data
-        var board = new Board { Title = "Demo Board" };
-        board.Swimlanes.Add(new Swimlane { Name = "To Do", Position = 0 });
-        ctx.Boards.Add(board);
-        ctx.SaveChanges();
-
+        // Ensure the schema is created (EF Core does this lazily, but we force it)
+        ctx.Database.EnsureCreated();
         return ctx;
     }
-
+    
     [Fact]
-    public async Task Index_Returns_View_With_Boards()
+    public async Task GetOrCreateCurrentUserBoardAsync_CreatesBoard_WhenNoneExists()
     {
-        // Arrange
-        await using var db = GetInMemoryContext();
-        var controller = new BoardController(db);
+        // ---------- Arrange ----------
+        // 1️⃣ Create a fake user that will act as the logged‑in user
+        var fakeUser = new AppUser
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test.user@example.com",
+            Email = "test.user@example.com",
+            EmailConfirmed = true
+        };
 
-        // Act
-        var result = await controller.Index();
+        // 2️⃣ Mock the dependencies
+        var userManager = MockUserManager(fakeUser);
+        var httpContextAccessor = MockHttpContextAccessor();
+        var db = CreateInMemoryDb();
 
-        // Assert
-        var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-        Assert.IsType<ViewResult>(result);
-        // Assert
-        var model = viewResult.Model.Should().BeAssignableTo<Board>().Subject;
-        Assert.IsType<Board>(model);
-        
-        model.Title.Should().Be("Demo Board");
-        model.Swimlanes.Should().ContainSingle(c => c.Name == "To Do");
+        // 3️⃣ Instantiate the service under test
+        var boardService = new BoardService(db, userManager, httpContextAccessor);
+
+        // ---------- Act ----------
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+
+        // ---------- Assert ----------
+        // 1️⃣ The method should have returned a non‑null board
+        Assert.NotNull(board);
+        // 2️⃣ The board must belong to the fake user
+        Assert.Equal(fakeUser.Id, board.OwnerId);
+        // 3️⃣ The title should contain the user name (as per service logic)
+        Assert.Contains(fakeUser.UserName, board.Title);
+        // The board should have the default swimlanes
+        Assert.Equal(3, board.Swimlanes.Count);
+        // 4️⃣ The board should now be persisted in the in‑memory DB
+        var boardFromDb = await db.Boards.FirstOrDefaultAsync(b => b.OwnerId == fakeUser.Id);
+        Assert.NotNull(boardFromDb);
+        Assert.Equal(board.Id, boardFromDb!.Id);
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Data;
 using Taskr.Models.User;
+using Taskr.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultUI();
 
 builder.Services.AddControllersWithViews();
+
+// Board service
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<BoardService>();
 
 var app = builder.Build();
 
