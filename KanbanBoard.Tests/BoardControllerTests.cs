@@ -5,6 +5,8 @@ using Taskr.Models.User;
 using Moq;
 using Taskr.Data;
 using Taskr.Services;
+using Xunit;
+using Microsoft.AspNetCore.Http;
 
 namespace Taskr.KanbanBoard.Tests;
 
@@ -50,12 +52,12 @@ public class BoardServiceTests
         ctx.Database.EnsureCreated();
         return ctx;
     }
-    
+
     [Fact]
     public async Task GetOrCreateCurrentUserBoardAsync_CreatesBoard_WhenNoneExists()
     {
         // ---------- Arrange ----------
-        // 1️⃣ Create a fake user that will act as the logged‑in user
+        // Create a fake user that will act as the logged‑in user
         var fakeUser = new AppUser
         {
             Id = Guid.NewGuid().ToString(),
@@ -64,27 +66,27 @@ public class BoardServiceTests
             EmailConfirmed = true
         };
 
-        // 2️⃣ Mock the dependencies
+        // Mock the dependencies
         var userManager = MockUserManager(fakeUser);
         var httpContextAccessor = MockHttpContextAccessor();
         var db = CreateInMemoryDb();
 
-        // 3️⃣ Instantiate the service under test
+        // Instantiate the service under test
         var boardService = new BoardService(db, userManager, httpContextAccessor);
 
         // ---------- Act ----------
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
 
         // ---------- Assert ----------
-        // 1️⃣ The method should have returned a non‑null board
+        // The method should have returned a non‑null board
         Assert.NotNull(board);
-        // 2️⃣ The board must belong to the fake user
+        // The board must belong to the fake user
         Assert.Equal(fakeUser.Id, board.OwnerId);
-        // 3️⃣ The title should contain the user name (as per service logic)
+        // The title should contain the user name (as per service logic)
         Assert.Contains(fakeUser.UserName, board.Title);
         // The board should have the default swimlanes
         Assert.Equal(3, board.Swimlanes.Count);
-        // 4️⃣ The board should now be persisted in the in‑memory DB
+        // The board should now be persisted in the in‑memory DB
         var boardFromDb = await db.Boards.FirstOrDefaultAsync(b => b.OwnerId == fakeUser.Id);
         Assert.NotNull(boardFromDb);
         Assert.Equal(board.Id, boardFromDb!.Id);

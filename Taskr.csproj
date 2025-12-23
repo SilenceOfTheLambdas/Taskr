@@ -30,4 +30,10 @@
       <Folder Include="Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\Debug\net10.0\KanbanBoard.Tests.sourcelink.json" />
+      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\KanbanBoard.Tests.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\project.assets.json" />
+    </ItemGroup>
+
 </Project>
