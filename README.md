@@ -12,6 +12,7 @@
 
 - **Framework:** ASP.NET Core 10.0 (MVC)
 - **Language:** C# 14
+- **Testing:** xUnit, FluentAssertions
 - **Database:** SQLite
 - **ORM:** Entity Framework Core
 - **Frontend:** Razor Pages, Bootstrap 5, jQuery
