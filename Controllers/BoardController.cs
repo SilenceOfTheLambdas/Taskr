@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Data;
@@ -6,7 +7,8 @@ namespace Taskr.Controllers;
 
 public class BoardController(KanbanDbContext context) : Controller
 {
-    // GET: Board first board
+    // GET: Index (Shows Kanban Board)
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var board = await context.Boards

@@ -10,9 +10,23 @@ var connectionString = builder.Configuration.GetConnectionString("KanbanDb")
 builder.Services.AddDbContext<KanbanDbContext>(options =>
     options.UseSqlite(connectionString));
 
-// 2️⃣ Register Identity
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<KanbanDbContext>();
+// Setup ASP.Net Identity system
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        // ---- Password policy (feel free to relax for a demo) ----
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+
+        // ---- Sign‑in options ----
+        options.SignIn.RequireConfirmedEmail = false;
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddEntityFrameworkStores<KanbanDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 builder.Services.AddControllersWithViews();
 
@@ -29,11 +43,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // **Important** – authentication & authorization must be added
-app.UseAuthentication();   // <-- adds UserManager, SignInManager, etc.
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Board}/{action=Index}");
+app.MapRazorPages();
 
 app.Run();
