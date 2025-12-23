@@ -23,6 +23,10 @@ jobs:
       # 3️⃣ Restore NuGet packages
       - name: Restore dependencies
         run: dotnet restore
+        
+      # Restore Tests NuGet packages
+      - name: Restore Tests dependencies
+        run: dotnet restore KanbanBoard.Tests/KanbanBoard.Tests.csproj
 
       # 4️⃣ Build the solution
       - name: Build
