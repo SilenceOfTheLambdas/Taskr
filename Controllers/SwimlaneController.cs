@@ -7,7 +7,7 @@ using Taskr.Services;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class SwimlaneController(BoardService boardService, KanbanDbContext dbContext) : Controller
+public class SwimlaneController(Services.BoardController boardController, KanbanDbContext dbContext) : Controller
 {
     // POST: /Swimlane/CreateNewSwimlane
     /// <summary>
@@ -18,7 +18,7 @@ public class SwimlaneController(BoardService boardService, KanbanDbContext dbCon
     [HttpPost]
     public async Task<IActionResult> CreateNewSwimlane(string swimlaneName)
     {
-        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         var newSwimlane = new Swimlane()
         {

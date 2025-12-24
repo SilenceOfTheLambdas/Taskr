@@ -34,7 +34,7 @@ builder.Services.AddControllersWithViews();
 
 // Board service
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<BoardService>();
+builder.Services.AddScoped<BoardController>();
 
 var app = builder.Build();
 

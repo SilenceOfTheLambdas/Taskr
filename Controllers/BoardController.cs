@@ -5,12 +5,12 @@ using Taskr.Services;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class BoardController(BoardService boardService) : Controller
+public class BoardController(Services.BoardController boardController) : Controller
 {
     // GET: Index (Shows Kanban Board)
     public async Task<IActionResult> Index()
     {
-        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         return View(board);
     }

@@ -1,19 +1,19 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Models.User;
 using Moq;
 using Taskr.Data;
+using Taskr.Models;
 using Taskr.Services;
 using Xunit;
-using Microsoft.AspNetCore.Http;
 
 namespace Taskr.KanbanBoard.Tests;
 
-public class BoardControllerTests
+public class SwimlaneControllerTests
 {
     [Fact]
-    public async Task GetOrCreateCurrentUserBoardAsync_CreatesBoard_WhenNoneExists()
+    public async Task TestSwimlaneCreation()
     {
         // ---------- Arrange ----------
         // Create a fake user that will act as the logged‑in user
@@ -35,19 +35,24 @@ public class BoardControllerTests
 
         // ---------- Act ----------
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
-
-        // ---------- Assert ----------
-        // The method should have returned a non‑null board
+        
+        // Make sure we actually got a board back
         Assert.NotNull(board);
-        // The board must belong to the fake user
-        Assert.Equal(fakeUser.Id, board.OwnerId);
-        // The title should contain the username (as per service logic)
-        Assert.Contains(fakeUser.UserName, board.Title);
-        // The board should have the default swimlanes
-        Assert.Equal(3, board.Swimlanes.Count);
-        // The board should now be persisted in the in‑memory DB
-        var boardFromDb = await db.Boards.FirstOrDefaultAsync(b => b.OwnerId == fakeUser.Id);
-        Assert.NotNull(boardFromDb);
-        Assert.Equal(board.Id, boardFromDb!.Id);
+        
+        var newSwimlane = new Swimlane()
+        {
+            Board = board,
+            BoardId = board.Id,
+            Name = "Test Swimlane",
+            Position = board.Swimlanes.LastOrDefault()!.Position + 1
+        };
+        db.Add(newSwimlane);
+        await db.SaveChangesAsync();
+        
+        // Assert that the swimlane was created successfully
+        Assert.Equal(4, board.Swimlanes.Count);
+        
+        // and then make sure the last swimlane has the expected name
+        Assert.Equal("Test Swimlane", board.Swimlanes.Last().Name);
     }
 }

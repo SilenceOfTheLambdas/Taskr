@@ -6,13 +6,13 @@ using Taskr.Models.User;
 
 namespace Taskr.Services;
 
-public class BoardService
+public class BoardController
 {
     private readonly KanbanDbContext _dbContext;
     private readonly UserManager<AppUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public BoardService(KanbanDbContext dbContext, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
+    public BoardController(KanbanDbContext dbContext, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _userManager = userManager;
