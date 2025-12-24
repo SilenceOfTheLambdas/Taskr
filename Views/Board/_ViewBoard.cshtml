@@ -26,6 +26,7 @@
             <button id="add-swimlane-btn" class="btn btn-sm btn-outline-primary w-20">+</button>
             <form id="add-swimlane-form" class="form-text d-none" name="swimlaneName">
                 <input type="text" name="swimlaneName" id="swimlane-name-input" class="form-control form-control-sm" placeholder="New Swimlane" autofocus>
+                <p class="small text-muted">Press Enter to save or Escape to cancel.</p>
             </form>
         </div>
     </div>
@@ -57,6 +58,14 @@
         } else {
             // An error has occurred
             console.error("Creation of Swimlane failed", response.status)
+        }
+    });
+    
+    // Revert back to + button if user presses Escape
+    form.addEventListener('keydown', (e) => {
+        if (e.code === "Escape") {
+            form.classList.add('d-none');
+            addBtn.classList.remove('d-none');
         }
     });
 </script>
