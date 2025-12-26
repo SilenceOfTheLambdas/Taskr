@@ -6,10 +6,8 @@ using Taskr.Models.User;
 
 namespace Taskr.Data;
 
-public class KanbanDbContext : IdentityDbContext<AppUser>
+public class KanbanDbContext(DbContextOptions<KanbanDbContext> options) : IdentityDbContext<AppUser>(options)
 {
-    public KanbanDbContext(DbContextOptions<KanbanDbContext> options) : base(options) {}
-    
     public DbSet<Board> Boards => Set<Board>();
     public DbSet<Swimlane> Swimlanes => Set<Swimlane>();
     public DbSet<Card> Cards => Set<Card>();

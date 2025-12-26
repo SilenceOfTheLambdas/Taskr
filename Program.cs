@@ -6,13 +6,13 @@ using Taskr.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("KanbanDb")
-    ?? throw new InvalidOperationException("KanbanDb connection string not found.");
+var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
+    ?? throw new InvalidOperationException("AZURE_SQL_CONNECTIONSTRING connection string not found.");
 
 builder.Services.AddDbContext<KanbanDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 
-// Setup ASP.Net Identity system
+// Set up ASP.Net Identity system
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     {
         // ---- Password policy (feel free to relax for a demo) ----
@@ -48,7 +48,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// **Important** – authentication & authorization must be added
+// **Important** – authentication & authorisation must be added
 app.UseAuthentication();
 app.UseAuthorization();
 

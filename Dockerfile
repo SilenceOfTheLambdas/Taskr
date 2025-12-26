@@ -13,14 +13,6 @@ ARG TARGETARCH
 # Restore dependencies
 RUN dotnet restore
 
-# Install dotnet-ef for migrations
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
-
-# Run migrations
-RUN dotnet ef migrations add AddDockerMigration
-RUN dotnet ef database update
-
 RUN dotnet publish -c Release -o /app
 
 # The example below uses an aspnet alpine image as the foundation for running the app.
@@ -31,12 +23,19 @@ RUN dotnet publish -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 WORKDIR /app
 
+# Fix for globalization cultures exception
+# ico libs are not installed by Alpine linux by default, so we need to add them
+RUN apk add --no-cache icu-libs icu-data-full
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 # Copy everything needed to run the app from the "build" stage.
 COPY --from=build /app .
 
-# Copy over the database file
-COPY Data/kanban.db data/kanban.db
-
 ENV ASPNETCORE_ENVIRONMENT=Production
+
+EXPOSE 80
+ENV ASPNETCORE_URLS=http://+:80
+
+USER $APP_UID
 
 ENTRYPOINT ["dotnet", "Taskr.dll"]
