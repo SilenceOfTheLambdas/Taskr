@@ -6,6 +6,8 @@
 
 ![Dotnet Build & Test](https://github.com/SilenceOfTheLambdas/Taskr/actions/workflows/dotnet.yml/badge.svg "Dotnet Build")
 
+**Live Demo:** https://taskr-gafxdebgb7exdfd8.westeurope-01.azurewebsites.net/
+
 ![img.png](img.png)
 
 ## 🛠 Tech Stack
@@ -13,10 +15,11 @@
 - **Framework:** ASP.NET Core 10.0 (MVC)
 - **Language:** C# 14
 - **Testing:** xUnit, FluentAssertions
-- **Database:** SQLite
+- **Database:** SQL Server (Azure)
 - **ORM:** Entity Framework Core
 - **Frontend:** Razor Pages, Bootstrap 5, jQuery
 - **Authentication:** ASP.NET Core Identity
+- **Deployment:** Docker
 
 ## 🚀 Getting Started
 
@@ -24,7 +27,7 @@
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
-### Setup
+### Setup (Dev)
 
 1. **Clone the repository:**
    ```bash
@@ -48,3 +51,12 @@
    ```
    The application will be available at `https://localhost:7060` or `http://localhost:5176`.
 
+### Setup (Docker Compose)
+
+1. **Clone repository as previous step.**
+
+2. **Run the docker image**
+   ```bash
+   docker compose up --build
+   ```
+   The application will be available at `http://localhost`.
