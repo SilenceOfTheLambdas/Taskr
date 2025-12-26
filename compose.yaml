@@ -1,0 +1,16 @@
+services:
+  server:
+    build:
+      context: .
+      target: final
+    user: "0" # Dirty fix for permission issues
+    environment:
+      - ConnectionStrings__KanbanDb=DataSource=/app/data/kanban.db
+    ports:
+      - "5176:8080"
+    volumes:
+      # Mount a named volume at /data inside the container
+      - kanban_sqlite_data:/app/data
+    restart: unless-stopped
+volumes:
+  kanban_sqlite_data:
