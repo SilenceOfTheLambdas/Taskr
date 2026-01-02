@@ -16,7 +16,8 @@
                 }
             </div>
             <div class="container p-0">
-                <button class="btn btn-sm btn-outline-primary w-100">New Card</button>
+                <button type="button" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#createCardModel">New Card</button>
+                <partial name="../Card/_CreateCard" model="new Card { SwimlaneId = swimlane.Id }"/>
             </div>
         </div>
     }
@@ -32,40 +33,4 @@
     </div>
 </div>
 
-<script>
-    const addBtn = document.getElementById('add-swimlane-btn');
-    const form = document.getElementById('add-swimlane-form');
-    const input = document.getElementById('swimlane-name-input');
-    
-    // Show input when the + button is pressed
-    addBtn.addEventListener('click', () => {
-        addBtn.classList.add('d-none');
-        form.classList.remove('d-none');
-        input.focus();
-    })
-    
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault()
-        
-        const swimlaneName = input.value;
-        const response = await fetch(`/Swimlane/CreateNewSwimlane?swimlaneName=${encodeURIComponent(swimlaneName)}`, {
-            method: 'POST'
-        });
-        
-        if (response.status === 201) {
-            // Redirect
-            window.location.href = '/';
-        } else {
-            // An error has occurred
-            console.error("Creation of Swimlane failed", response.status)
-        }
-    });
-    
-    // Revert back to + button if user presses Escape
-    form.addEventListener('keydown', (e) => {
-        if (e.code === "Escape") {
-            form.classList.add('d-none');
-            addBtn.classList.remove('d-none');
-        }
-    });
-</script>
+<script src="js/site.js"></script>
