@@ -16,10 +16,14 @@
                 }
             </div>
             <div class="container p-0">
-                <button type="button" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#createCardModel">New Card</button>
-                <partial name="../Card/_CreateCard" model="new Card { SwimlaneId = swimlane.Id }"/>
+                <button type="button" class="btn btn-sm btn-outline-primary w-100" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#createCardModel-@swimlane.Id">New Card</button>
             </div>
         </div>
+        <partial name="../Card/_CreateCard" 
+                 view-data='@new ViewDataDictionary(ViewData) {
+                  {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
     }
     @* New Swimlane Button *@
     <div class="col-md-auto rounded" style="margin: 1rem">
@@ -32,5 +36,4 @@
         </div>
     </div>
 </div>
-
 <script src="js/site.js"></script>

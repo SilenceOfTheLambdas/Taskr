@@ -1,7 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-const addBtn = document.getElementById('add-swimlane-btn');
+﻿const addBtn = document.getElementById('add-swimlane-btn');
 const form = document.getElementById('add-swimlane-form');
 const input = document.getElementById('swimlane-name-input');
 
@@ -36,3 +33,5 @@ form.addEventListener('keydown', (e) => {
         addBtn.classList.remove('d-none');
     }
 });
+
+// CREATE CARD FORM

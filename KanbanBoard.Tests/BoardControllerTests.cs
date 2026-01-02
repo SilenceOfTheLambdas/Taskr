@@ -17,13 +17,7 @@ public class BoardControllerTests
     {
         // ---------- Arrange ----------
         // Create a fake user that will act as the logged‑in user
-        var fakeUser = new AppUser
-        {
-            Id = Guid.NewGuid().ToString(),
-            UserName = "test.user@example.com",
-            Email = "test.user@example.com",
-            EmailConfirmed = true
-        };
+        var fakeUser = TestsHelper.CreateTestUser();
 
         // Mock the dependencies
         var userManager = TestsHelper.MockUserManager(fakeUser);

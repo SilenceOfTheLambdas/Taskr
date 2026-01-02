@@ -1,20 +1,17 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Taskr.Models.User;
-using Moq;
-using Taskr.Data;
 using Taskr.Models;
+using Taskr.Models.User;
 using Taskr.Services;
 using Xunit;
 
 namespace Taskr.KanbanBoard.Tests;
 
-public class SwimlaneControllerTests
+public class CardControllerTests
 {
-    [Fact]
-    public async Task TestSwimlaneCreation()
+    [Fact(DisplayName = "Test Card Creation")]
+    public async Task TestCardIsCreated()
     {
+        #region Setting-up Enviroment
+
         // ---------- Arrange ----------
         // Create a fake user that will act as the logged‑in user
         var fakeUser = TestsHelper.CreateTestUser();
@@ -26,8 +23,7 @@ public class SwimlaneControllerTests
 
         // Instantiate the service under test
         var boardService = new BoardController(db, userManager, httpContextAccessor);
-
-        // ---------- Act ----------
+        
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         
         // Make sure we actually got a board back
@@ -42,11 +38,31 @@ public class SwimlaneControllerTests
         };
         db.Add(newSwimlane);
         await db.SaveChangesAsync();
+
+        #endregion
         
-        // Assert that the swimlane was created successfully
-        Assert.Equal(4, board.Swimlanes.Count);
+        // ---------- Act ----------
+        var newCard = new Card()
+        {
+            Swimlane = newSwimlane,
+            SwimlaneId = newSwimlane.Id,
+            Title = "Test Card",
+            Description = "This is a test card",
+            Position = 0
+        };
+        db.Add(newCard);
+        await db.SaveChangesAsync();
         
-        // and then make sure the last swimlane has the expected name
-        Assert.Equal("Test Swimlane", board.Swimlanes.Last().Name);
+        // Test we have just a single card in the swimlane
+        Assert.Single(newSwimlane.Cards);
+        
+        // Test the card title is correct
+        Assert.Equal("Test Card", newSwimlane.Cards.First().Title);
+        
+        // Test the card description is correct
+        Assert.Equal("This is a test card", newSwimlane.Cards.First().Description);
+        
+        // Test that the card belongs to the swimlane
+        Assert.Equal(newSwimlane.Id, newCard.SwimlaneId);
     }
 }

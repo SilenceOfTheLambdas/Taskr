@@ -1,28 +1,32 @@
-@model Card
+@{
+    var swimlaneId = ViewData["SwimlaneId"];
+    var swimlaneName = ViewData["SwimlaneName"];
+}
 
-<div class="modal fade" id="createCardModel" tabindex="-1" aria-labelledby="createCardModelLabel" aria-hidden="true">
+<div class="modal fade" id="createCardModel-@swimlaneId" tabindex="-1" aria-labelledby="createCardModelLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="createCardModelLabel">New Card</h1>
+                <h1 class="modal-title fs-5" id="createCardModelLabel">New Card in @swimlaneName</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="create-card-form-@swimlaneId" class="create-card-form" data-swimlane-id="@swimlaneId">
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Card Title:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="card-title" class="col-form-label">Card Title:</label>
+                        <input type="text" class="form-control" id="card-title">
                     </div>
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Description:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        <label for="card-description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="card-description"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Create</button>
+                <button type="submit" form="create-card-form-@swimlaneId" class="btn btn-primary">Create</button>
             </div>
         </div>
     </div>
 </div>
+<script src="js/CreateCard.js"></script>

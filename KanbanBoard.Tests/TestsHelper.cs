@@ -49,4 +49,19 @@ public class TestsHelper
         ctx.Database.EnsureCreated();
         return ctx;
     }
+
+    /// <summary>
+    /// Creates a test user with a username and email.
+    /// </summary>
+    /// <returns></returns>
+    public static AppUser CreateTestUser()
+    {
+        return new AppUser
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test.user@example.com",
+            Email = "test.user@example.com",
+            EmailConfirmed = true
+        };
+    }
 }
