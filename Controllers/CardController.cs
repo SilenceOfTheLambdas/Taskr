@@ -16,7 +16,7 @@ public class CardController(Services.BoardController boardController, KanbanDbCo
     /// <param name="cardDescription">Description of the card</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateNewCard(int swimlaneId, [FromForm]string cardTitle, [FromForm]string cardDescription)
+    public async Task<IActionResult> CreateNewCard(int swimlaneId, [FromForm]string cardTitle, [FromForm]string? cardDescription)
     {
         var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();

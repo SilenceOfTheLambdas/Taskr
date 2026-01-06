@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Taskr.Data;
 
@@ -11,9 +12,11 @@ using Taskr.Data;
 namespace Taskr.Migrations
 {
     [DbContext(typeof(KanbanDbContext))]
-    partial class KanbanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260106145411_CardDescriptionNotRequired")]
+    partial class CardDescriptionNotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

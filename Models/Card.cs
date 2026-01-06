@@ -11,7 +11,7 @@ public class Card
     public string Title { get; set; } = string.Empty;
     
     [StringLength(2000, MinimumLength = 0)]
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
     
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
