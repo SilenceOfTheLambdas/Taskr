@@ -2,17 +2,14 @@
 
 <div class="row flex-row">
 
-    @foreach (Swimlane swimlane in Model.Swimlanes)
+    @foreach (var swimlane in Model.Swimlanes)
     {
-        <div class="col flex-column border border-dark-subtle rounded" style="margin: 1rem">
+        <div class="col flex-column border border-dark-subtle rounded" style="margin: 1rem; max-width: 20rem; min-width: 20rem">
             <h2 class="mb-3">@swimlane.Name</h2>
             <div class="d-flex flex-column gap-2 mb-3">
-                @foreach (Card card in swimlane.Cards)
+                @foreach (var card in swimlane.Cards)
                 {
-                    <div class="p-2 bg-light-subtle border border-dark-subtle rounded">
-                        <div class="fw-bold">@card.Title</div>
-                        <div class="small text-muted">@card.Description</div>
-                    </div>
+                    <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }' />
                 }
             </div>
             <div class="container p-0">

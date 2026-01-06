@@ -1,0 +1,27 @@
+﻿@{
+    var card = (Card)ViewData["Card"]!;
+}
+
+<div class="card text-white bg-dark mb-3">
+    <div class="card-header d-flex justify-content-between" style="max-height: fit-content;">
+        <div><h4>@card.Title</h4></div>
+        <!-- Example split danger button -->
+        <div class="btn-group" style="max-height: 40px;">
+            <button type="button" class="btn btn-sm btn-outline-secondary text-secondary">Edit</button>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><form id="delete-card-form" class="delete-card-form" data-card-id="@card.Id">
+                    <button class="btn btn-light" style="width: 100%" type="submit">Delete</button>
+                </form></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body" style="max-height: 120px; overflow: auto;">
+        <p class="card-text text-secondary">@card.Description</p>
+    </div>
+    <div class="card-footer">
+        <p class="card-text"><small class="text-light">Created @card.CreatedAt.ToShortDateString()</small></p>
+    </div>
+</div>

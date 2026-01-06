@@ -65,4 +65,57 @@ public class CardControllerTests
         // Test that the card belongs to the swimlane
         Assert.Equal(newSwimlane.Id, newCard.SwimlaneId);
     }
+
+    [Fact(DisplayName = "Test Card Deletion")]
+    public async Task TestCardIsDeleted()
+    {
+        #region Setting-up Enviroment
+
+        // ---------- Arrange ----------
+        // Create a fake user that will act as the logged‑in user
+        var fakeUser = TestsHelper.CreateTestUser();
+
+        // Mock the dependencies
+        var userManager = TestsHelper.MockUserManager(fakeUser);
+        var httpContextAccessor = TestsHelper.MockHttpContextAccessor();
+        var db = TestsHelper.CreateInMemoryDb();
+
+        // Instantiate the service under test
+        var boardService = new BoardController(db, userManager, httpContextAccessor);
+        
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        
+        // Make sure we actually got a board back
+        Assert.NotNull(board);
+        
+        var newSwimlane = new Swimlane()
+        {
+            Board = board,
+            BoardId = board.Id,
+            Name = "Test Swimlane",
+            Position = board.Swimlanes.LastOrDefault()!.Position + 1
+        };
+        db.Add(newSwimlane);
+        await db.SaveChangesAsync();
+
+        #endregion
+        
+        // ---------- Act ----------
+        var newCard = new Card()
+        {
+            Swimlane = newSwimlane,
+            SwimlaneId = newSwimlane.Id,
+            Title = "Test Card",
+            Description = "This is a test card",
+            Position = 0
+        };
+        db.Add(newCard);
+        await db.SaveChangesAsync();
+        
+        db.Remove(newCard);
+        await db.SaveChangesAsync();
+        
+        // Test that the swimlane is now empty
+        Assert.Empty(newSwimlane.Cards);
+    }
 }

@@ -38,4 +38,21 @@ public class CardController(Services.BoardController boardController, KanbanDbCo
         
         return StatusCode(201);
     }
+
+    /// <summary>
+    /// Deletes a card from the database
+    /// </summary>
+    /// <param name="cardId">The ID of the card to delete.</param>
+    /// <returns>204 - If Successful, NotFound() otherwise.</returns>
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCard([FromQuery]int cardId)
+    {
+        var card = await dbContext.Cards.FindAsync(cardId);
+        if (card == null) return NotFound();
+        
+        dbContext.Remove(card);
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(204);
+    }
 }
