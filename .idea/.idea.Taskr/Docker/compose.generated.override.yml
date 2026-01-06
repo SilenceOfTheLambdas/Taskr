@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  server:
+    build:
+      context: "C:\\Users\\csmit\\RiderProjects\\Taskr"
+      dockerfile: "Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net10.0/Taskr.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net10.0/Taskr.staticwebassets.runtime.CT.json"
+    image: "taskr:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\csmit\\RiderProjects\\Taskr:/app:rw"
+    - "C:\\Users\\csmit\\RiderProjects\\Taskr:/src:rw"
+    - "C:\\Users\\csmit\\.nuget\\packages:/root/.nuget/packages"
+    working_dir: "/app"
