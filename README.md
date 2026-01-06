@@ -27,7 +27,7 @@
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
-### Setup (Dev)
+### Setup (Dev) *Will require your own SQL Server instance*
 
 1. **Clone the repository:**
    ```bash
@@ -40,12 +40,18 @@
    dotnet restore
    ```
 
-3. **Apply Database Migrations:**
+3. **Store Connection String in User Secrets:**
+   ```bash
+   dotnet user-secrets init
+   dotnet user-secrets set "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING" "Server=<Your SQL Server Instance>;Database=<Your Database Name>;User Id=<Your User Id>;Password=<>"
+   ```
+
+4. **Apply Database Migrations:**
    ```bash
    dotnet ef database update
    ```
 
-4. **Run the application:**
+5. **Run the application:**
    ```bash
    dotnet run
    ```
@@ -54,6 +60,8 @@
 ### Setup (Docker Compose)
 
 1. **Clone repository as previous step.**
+   2. You will need to have docker installed on your machine.
+   3. Like the previous step, you will need to adjust the connection string in the `docker-compose.yml` file.
 
 2. **Run the docker image**
    ```bash
