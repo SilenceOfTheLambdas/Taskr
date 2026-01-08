@@ -1,21 +1,25 @@
 @model Board
 
-<div class="row flex-row">
+<div class="row flex-nowrap g-4 pb-3" style="width: 100%; height: 100%; overflow-x: auto; overflow-y: scroll;">
 
     @foreach (var swimlane in Model.Swimlanes)
     {
-        <div class="col flex-column border border-dark-subtle rounded" style="margin: 1rem; max-width: 20rem; min-width: 20rem">
-            <h2 class="mb-3">@swimlane.Name</h2>
-            <div class="d-flex flex-column gap-2 mb-3">
-                @foreach (var card in swimlane.Cards)
-                {
-                    <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }' />
-                }
-            </div>
-            <div class="container p-0">
-                <button type="button" class="btn btn-sm btn-outline-primary w-100" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#createCardModel-@swimlane.Id">New Card</button>
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3" style="min-width: 380px; max-width: 380px; height: 100%;">
+            <div class="card h-100 text-bg-dark">
+                <div class="card-body">
+                    <h5 class="card-title">@swimlane.Name</h5>
+                    <div class="card-body">
+                        @foreach (var card in swimlane.Cards)
+                        {
+                            <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }' />
+                        }
+                    </div>
+                    <div class="card-footer text-body-secondary">
+                        <button type="button" class="btn btn-sm btn-outline-primary w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#createCardModel-@swimlane.Id">New Card</button>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="../Card/_CreateCard" 

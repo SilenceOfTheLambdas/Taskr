@@ -32,4 +32,25 @@ public class SwimlaneController(Services.BoardController boardController, Kanban
         
         return StatusCode(201);
     }
+
+    /// <summary>
+    /// Removes a swimlane from the board with a given swimlane ID
+    /// </summary>
+    /// <param name="swimlaneId">The ID of the swimlane</param>
+    /// <returns>204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
+    /// a matching swimlaneId is located in the board.</returns>
+    [HttpDelete]
+    public async Task<IActionResult> DeleteSwimlane([FromQuery] int swimlaneId)
+    {
+        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        if (board == null) return Challenge();
+
+        var swimlaneToDelete = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
+        if (swimlaneToDelete == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
+        
+        board.Swimlanes.Remove(swimlaneToDelete);
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(204);
+    }
 }
