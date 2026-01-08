@@ -7,10 +7,20 @@
         <div class="col-10 col-sm-6 col-md-4 col-lg-3" style="min-width: 380px; max-width: 380px; height: 100%;">
             <div class="card h-100 text-bg-dark">
                 <div class="card-header d-flex justify-content-between">
-                    <div class="d-flex align-items-center"><h5>@swimlane.Name</h5></div>
-                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                        <button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-fill"></i></button>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteSwimlaneModal-@swimlane.Id"><i class="bi bi-x"></i></button>
+                    <div class="d-flex align-items-center">
+                        <h5 class="text-break" id="swimlane-title-@swimlane.Id" autofocus>@swimlane.Name</h5>
+                        <div class="invalid-feedback">
+                            Swimlane name must be between 1 - 20 Characters.
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Basic outlined example" style="max-height: 34px;">
+                        <button type="button" id="update-swimlane-btn" class="btn btn-outline-primary edit-swimlane-btn"
+                                data-swimlane-id="@swimlane.Id">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger update-swimlane-btn" data-bs-toggle="modal" data-bs-target="#deleteSwimlaneModal-@swimlane.Id">
+                            <i class="bi bi-x"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -20,11 +30,11 @@
                             <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }'/>
                         }
                     </div>
-                    <div class="card-footer text-body-secondary">
-                        <button type="button" class="btn btn-sm btn-outline-primary w-100"
-                                data-bs-toggle="modal"
-                                data-bs-target="#createCardModel-@swimlane.Id">New Card</button>
-                    </div>
+                </div>
+                <div class="card-footer text-body-secondary">
+                    <button type="button" class="btn btn-sm btn-outline-primary w-100"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createCardModel-@swimlane.Id">New Card</button>
                 </div>
             </div>
         </div>

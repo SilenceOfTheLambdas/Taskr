@@ -29,6 +29,8 @@
         </div>
     </nav>
 </header>
+<div id="live-alert-placeholder">
+</div>
 <div class="container-fluid px-5 vw-100">
     <main role="main" class="pb-3">
         @RenderBody()
@@ -37,7 +39,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2025 - Taskr -
+        &copy; @DateTime.UtcNow.Year - Taskr - Callum-James Smith
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

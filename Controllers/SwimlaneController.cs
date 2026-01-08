@@ -53,4 +53,26 @@ public class SwimlaneController(Services.BoardController boardController, Kanban
         
         return StatusCode(204);
     }
+
+    /// <summary>
+    /// Performs a HttpPATCH request to update the name of a swimlane with a given swimlane ID
+    /// </summary>
+    /// <param name="swimlaneId">The ID of the swimlane to update</param>
+    /// <param name="newSwimlaneName">The new name of the swimlane</param>
+    /// <returns>204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
+    /// a matching swimlaneId is located in the board.</returns>
+    [HttpPatch]
+    public async Task<IActionResult> UpdateSwimlaneTitle([FromQuery] int swimlaneId, [FromQuery] string newSwimlaneName)
+    {
+        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        if (board == null) return Challenge();
+        
+        var swimlaneToUpdate = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
+        if (swimlaneToUpdate == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
+        
+        swimlaneToUpdate.Name = newSwimlaneName;
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(204);
+    }
 }
