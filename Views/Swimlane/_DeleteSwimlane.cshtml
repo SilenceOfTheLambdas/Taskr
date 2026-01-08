@@ -1,0 +1,26 @@
+@{
+    var swimlaneId = ViewData["SwimlaneId"];
+    var swimlaneName = ViewData["SwimlaneName"];
+}
+
+<div class="modal fade" id="deleteSwimlaneModal-@swimlaneId" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Swimlane Deletion Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the swimlane: @swimlaneName</p>
+                <p class="text-danger-emphasis">All Associated cards will be deleted!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="delete-swimlane-form" class="delete-swimlane-form" data-swimlane-id="@swimlaneId">
+                    <button class="btn btn-danger" style="width: 100%" type="submit">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

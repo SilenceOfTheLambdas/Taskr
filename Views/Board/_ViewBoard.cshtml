@@ -10,7 +10,7 @@
                     <div class="d-flex align-items-center"><h5>@swimlane.Name</h5></div>
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                         <button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-fill"></i></button>
-                        <button type="button" class="btn btn-outline-danger"><i class="bi bi-x"></i></button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteSwimlaneModal-@swimlane.Id"><i class="bi bi-x"></i></button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -30,7 +30,9 @@
         </div>
         <partial name="../Card/_CreateCard" 
                  view-data='@new ViewDataDictionary(ViewData) {
-                  {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
+                     {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
+        <partial name="../Swimlane/_DeleteSwimlane" 
+                 view-data='@new ViewDataDictionary(ViewData) { {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
     }
     @* New Swimlane Button *@
     <div class="col-md-auto rounded" style="margin: 1rem">

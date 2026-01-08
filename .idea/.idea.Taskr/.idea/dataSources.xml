@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="kanban" uuid="07c4db93-9b38-44a3-a772-43256280228f">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/kanban.db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="taskr_db@taskr.database.windows.net" uuid="77f520d8-786d-4764-bb3f-6fdd19dd1d74">
       <driver-ref>azure.ms</driver-ref>
       <synchronize>true</synchronize>

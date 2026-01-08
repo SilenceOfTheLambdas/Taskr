@@ -1,21 +1,26 @@
 document.addEventListener('submit', async (e) => {
 
-    if (e.target && e.target.classList.contains('delete-card-form'))
+    if (e.target && e.target.classList.contains('delete-swimlane-form'))
     {
         e.preventDefault();
 
         const form = e.target;
-        const cardId = form.dataset.cardId;
+        const swimlaneId = form.dataset.swimlaneId;
 
-        const response = await fetch(`Card/DeleteCard?cardId=${encodeURIComponent(cardId)}`, {
-            method: 'DELETE'
-        });
+        try {
+            const response = await fetch(`Swimlane/DeleteSwimlane?swimlaneId=${encodeURIComponent(swimlaneId)}`, {
+                method: 'DELETE'
+            });
 
-        if (response.status === 204)
-        {
-            window.location.href = '/';
-        } else {
-            console.error("Deletion of Card failed :/", response.status);
+            if (response.status === 204)
+            {
+                window.location.href = '/';
+            } else {
+                console.error("Deletion of swimlane failed :/", response.status);
+            }
+        } catch (error) {
+            console.error("Deletion of swimlane failed :/", error);
         }
+        
     }
 });
