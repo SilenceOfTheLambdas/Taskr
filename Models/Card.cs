@@ -10,7 +10,7 @@ public class Card
     [StringLength(40, MinimumLength = 1, ErrorMessage = "Title must be between 1 and 40 characters long.")]
     public string Title { get; set; } = string.Empty;
     
-    [StringLength(2000, MinimumLength = 0)]
+    [StringLength(500, ErrorMessage = "Description must be less than 500 characters long.")]
     public string? Description { get; set; } = string.Empty;
     
     [DataType(DataType.Date)]

@@ -18,6 +18,9 @@ public class CardController(Services.BoardController boardController, KanbanDbCo
     [HttpPost]
     public async Task<IActionResult> CreateNewCard(int swimlaneId, [FromForm]string cardTitle, [FromForm]string? cardDescription)
     {
+        // Check the model state and make sure it's valid
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
         var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         
@@ -37,6 +40,58 @@ public class CardController(Services.BoardController boardController, KanbanDbCo
         await dbContext.SaveChangesAsync();
         
         return StatusCode(201);
+    }
+    
+    /// <summary>
+    /// Updates the title and description of a card with a given card ID. Description can be left blank if desired.
+    /// </summary>
+    /// <param name="cardId"></param>
+    /// <param name="cardTitle"></param>
+    /// <param name="cardDescription"></param>
+    /// <returns>204 if the update is successful, 404 if a card could not be found.</returns>
+    [HttpPatch]
+    public async Task<IActionResult> UpdateCardDetails([FromQuery]int cardId, [FromForm]string cardTitle, [FromForm]string? cardDescription)
+    {
+        // Check the model state and make sure it's valid
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+        var card = await dbContext.Cards.FindAsync(cardId);
+        if (card == null) return NotFound();
+        
+        await UpdateCardName(card, cardTitle);
+        await UpdateCardDescription(card, cardDescription ?? "");
+        
+        return StatusCode(204);
+    }
+
+    /// <summary>
+    /// Updates the name of a card with a given card ID
+    /// </summary>
+    /// <param name="card">The card to adjust the name of.</param>
+    /// <param name="newCardName">The new name for the card</param>
+    /// <returns>204 if the change was successful, 404 if no card with the supplied ID is found.</returns>
+    [HttpPatch]
+    private async Task<IActionResult> UpdateCardName(Card card, string newCardName)
+    {
+        card.Title = newCardName;
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(204);
+    }
+    
+    /// <summary>
+    /// Updates the description of a card with a given card ID
+    /// </summary>
+    /// <param name="card">The card to adjust the description of.</param>
+    /// <param name="newDescription">The new description for the card</param>
+    /// <returns>204 if the change was successful, 404 if no card with the supplied ID is found.</returns>
+    [HttpPatch]
+    private async Task<IActionResult> UpdateCardDescription(Card card, string newDescription = "")
+    {
+        card.Description = newDescription;
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(204);
     }
 
     /// <summary>

@@ -1,0 +1,33 @@
+@{
+    var swimlaneId = ViewData["SwimlaneId"];
+    var swimlaneName = ViewData["SwimlaneName"];
+    const int maxTitleLength = 40;
+    const int maxDescriptionLength = 500;
+}
+
+<div class="modal fade" id="createCardModel-@swimlaneId" tabindex="-1" aria-labelledby="createCardModelLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createCardModelLabel">New Card in @swimlaneName</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="create-card-form-@swimlaneId" class="create-card-form" data-swimlane-id="@swimlaneId">
+                    <div class="mb-3">
+                        <label for="card-title" class="col-form-label">Card Title:</label>
+                        <input type="text" class="form-control" id="card-title" required maxlength="@maxTitleLength">
+                    </div>
+                    <div class="mb-3">
+                        <label for="card-description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="card-description" maxlength="@maxDescriptionLength"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="create-card-form-@swimlaneId" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

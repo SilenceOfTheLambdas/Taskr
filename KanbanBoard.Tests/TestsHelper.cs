@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Taskr.Data;
 using Taskr.Models.User;
+using Taskr.Services;
 
 namespace Taskr.KanbanBoard.Tests;
 
@@ -63,5 +64,21 @@ public class TestsHelper
             Email = "test.user@example.com",
             EmailConfirmed = true
         };
+    }
+    
+    public static void SetupEnvironment(out AppUser fakeUser, out UserManager<AppUser> userManager,
+        out IHttpContextAccessor httpContextAccessor, out KanbanDbContext db, out BoardController boardService)
+    {
+        // ---------- Arrange ----------
+        // Create a fake user that will act as the logged‑in user
+        fakeUser = CreateTestUser();
+
+        // Mock the dependencies
+        userManager = MockUserManager(fakeUser);
+        httpContextAccessor = MockHttpContextAccessor();
+        db = CreateInMemoryDb();
+
+        // Instantiate the service under test
+        boardService = new BoardController(db, userManager, httpContextAccessor);
     }
 }

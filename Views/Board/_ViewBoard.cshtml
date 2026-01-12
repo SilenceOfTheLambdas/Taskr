@@ -28,6 +28,8 @@
                         @foreach (var card in swimlane.Cards)
                         {
                             <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }'/>
+                            // Update Card Modal
+                            <partial name="../Card/_Update" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }'/>
                         }
                     </div>
                 </div>
@@ -38,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <partial name="../Card/_CreateCard" 
+        <partial name="../Card/_Create" 
                  view-data='@new ViewDataDictionary(ViewData) {
                      {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
         <partial name="../Swimlane/_DeleteSwimlane" 

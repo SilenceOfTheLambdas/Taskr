@@ -1,6 +1,5 @@
+using Taskr.Controllers;
 using Taskr.Models;
-using Taskr.Models.User;
-using Taskr.Services;
 using Xunit;
 
 namespace Taskr.KanbanBoard.Tests;
@@ -12,17 +11,8 @@ public class CardControllerTests
     {
         #region Setting-up Enviroment
 
-        // ---------- Arrange ----------
-        // Create a fake user that will act as the logged‑in user
-        var fakeUser = TestsHelper.CreateTestUser();
-
-        // Mock the dependencies
-        var userManager = TestsHelper.MockUserManager(fakeUser);
-        var httpContextAccessor = TestsHelper.MockHttpContextAccessor();
-        var db = TestsHelper.CreateInMemoryDb();
-
-        // Instantiate the service under test
-        var boardService = new BoardController(db, userManager, httpContextAccessor);
+        TestsHelper.SetupEnvironment(out var fakeUser, out var userManager, out var httpContextAccessor, 
+            out var db, out var boardService);
         
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         
@@ -71,17 +61,8 @@ public class CardControllerTests
     {
         #region Setting-up Enviroment
 
-        // ---------- Arrange ----------
-        // Create a fake user that will act as the logged‑in user
-        var fakeUser = TestsHelper.CreateTestUser();
-
-        // Mock the dependencies
-        var userManager = TestsHelper.MockUserManager(fakeUser);
-        var httpContextAccessor = TestsHelper.MockHttpContextAccessor();
-        var db = TestsHelper.CreateInMemoryDb();
-
-        // Instantiate the service under test
-        var boardService = new BoardController(db, userManager, httpContextAccessor);
+        TestsHelper.SetupEnvironment(out var fakeUser, out var userManager, out var httpContextAccessor, 
+            out var db, out var boardService);
         
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         
@@ -117,5 +98,41 @@ public class CardControllerTests
         
         // Test that the swimlane is now empty
         Assert.Empty(newSwimlane.Cards);
+    }
+
+    [Fact(DisplayName = "Test Updating Card Title")]
+    public async Task TestCardTitleIsUpdated()
+    {
+        #region Setting-up Enviroment
+        
+        TestsHelper.SetupEnvironment(out var fakeUser, out var userManager, out var httpContextAccessor, 
+            out var db, out var boardService);
+        
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        // Make sure we actually got a board back
+        Assert.NotNull(board);
+        
+        var newSwimlane = new Swimlane()
+        {
+            Board = board,
+            BoardId = board.Id,
+            Name = "Test Swimlane",
+            Position = board.Swimlanes.LastOrDefault()!.Position + 1
+        };
+        db.Add(newSwimlane);
+        await db.SaveChangesAsync();
+        
+        var newCard = new Card()
+        {
+            Swimlane = newSwimlane,
+            SwimlaneId = newSwimlane.Id,
+            Title = "Test Card",
+            Description = "This is a test card",
+            Position = 0
+        };
+        db.Add(newCard);
+        await db.SaveChangesAsync();
+        
+        #endregion
     }
 }
