@@ -26,12 +26,12 @@ jobs:
         
       # Restore Tests NuGet packages
       - name: Restore Tests dependencies
-        run: dotnet restore KanbanBoard.Tests/KanbanBoard.Tests.csproj
+        run: dotnet restore Taskr.Tests
 
       # 4️⃣ Build the solution
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
-      # 5️⃣ Run unit/integration tests (if you have any)
+      # 5️⃣ Run unit/integration tests
       - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+        run: dotnet test Taskr.Tests
