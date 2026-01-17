@@ -6,19 +6,11 @@ using Taskr.Models.User;
 
 namespace Taskr.Services;
 
-public class BoardController
+public class BoardService(
+    KanbanDbContext dbContext,
+    UserManager<AppUser> userManager,
+    IHttpContextAccessor httpContextAccessor)
 {
-    private readonly KanbanDbContext _dbContext;
-    private readonly UserManager<AppUser> _userManager;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public BoardController(KanbanDbContext dbContext, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
-    {
-        _dbContext = dbContext;
-        _userManager = userManager;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     /// <summary>
     /// Gets or creates a board for the current user
     /// </summary>
@@ -28,15 +20,15 @@ public class BoardController
     {
         // Guard against a missing HttpContext (should never happen in MVC,
         // but it protects background jobs that might reuse the service)
-        var httpContext = _httpContextAccessor.HttpContext;
+        var httpContext = httpContextAccessor.HttpContext;
         if (httpContext == null) return null;
 
         // GetUserAsync will return null if the principal has no NameIdentifier claim
-        var user = await _userManager.GetUserAsync(httpContext.User);
+        var user = await userManager.GetUserAsync(httpContext.User);
         if (user == null) return null;   // unauthenticated – caller decides what to do
 
         // Check to see if the current user has a board
-        var board = await _dbContext.Boards
+        var board = await dbContext.Boards
             .Include(b => b.Swimlanes)
             .ThenInclude(s => s.Cards)
             .FirstOrDefaultAsync(b => b.OwnerId == user.Id);
@@ -49,17 +41,17 @@ public class BoardController
                 Title = $"{user.UserName}'s Board",
                 OwnerId = user.Id
             };
-            _dbContext.Add(board);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Add(board);
+            await dbContext.SaveChangesAsync();
             
             // Now create the default swimlanes for the board
             var swimlanes = CreateNewUserSwimlanes(board.Id);
 
             foreach (var swimlane in swimlanes)
             {
-                _dbContext.Add(swimlane);
+                dbContext.Add(swimlane);
             }
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
         
         return board;

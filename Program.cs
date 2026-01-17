@@ -6,11 +6,18 @@ using Taskr.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
-    ?? throw new InvalidOperationException("AZURE_SQL_CONNECTIONSTRING connection string not found.");
-
-builder.Services.AddDbContext<KanbanDbContext>(options =>
-    options.UseSqlServer(connectionString));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<KanbanDbContext>(options => options.UseInMemoryDatabase("TestDatabase"));
+}
+else
+{
+    var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
+        ?? throw new InvalidOperationException("AZURE_SQL_CONNECTIONSTRING connection string not found.");
+    
+    builder.Services.AddDbContext<KanbanDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 
 // Set up ASP.Net Identity system
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -34,7 +41,7 @@ builder.Services.AddControllersWithViews();
 
 // Board service
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<BoardController>();
+builder.Services.AddScoped<BoardService>();
 
 var app = builder.Build();
 

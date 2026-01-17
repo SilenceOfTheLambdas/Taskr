@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -6,9 +7,9 @@ using Taskr.Data;
 using Taskr.Models.User;
 using Taskr.Services;
 
-namespace Taskr.KanbanBoard.Tests;
+namespace Taskr.Tests;
 
-public class TestsHelper
+public static class TestsHelper
 {
     /// Create a mock user manager that always returns the supplied user
     public static UserManager<AppUser> MockUserManager(AppUser user)
@@ -59,7 +60,7 @@ public class TestsHelper
     {
         return new AppUser
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = "test-user-id",
             UserName = "test.user@example.com",
             Email = "test.user@example.com",
             EmailConfirmed = true
@@ -67,7 +68,7 @@ public class TestsHelper
     }
     
     public static void SetupEnvironment(out AppUser fakeUser, out UserManager<AppUser> userManager,
-        out IHttpContextAccessor httpContextAccessor, out KanbanDbContext db, out BoardController boardService)
+        out IHttpContextAccessor httpContextAccessor, out KanbanDbContext db, out BoardService boardService)
     {
         // ---------- Arrange ----------
         // Create a fake user that will act as the logged‑in user
@@ -79,6 +80,6 @@ public class TestsHelper
         db = CreateInMemoryDb();
 
         // Instantiate the service under test
-        boardService = new BoardController(db, userManager, httpContextAccessor);
+        boardService = new BoardService(db, userManager, httpContextAccessor);
     }
 }

@@ -7,7 +7,7 @@ using Taskr.Services;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class SwimlaneController(Services.BoardController boardController, KanbanDbContext dbContext) : Controller
+public class SwimlaneController(Services.BoardService boardService, KanbanDbContext dbContext) : Controller
 {
     // POST: /Swimlane/CreateNewSwimlane
     /// <summary>
@@ -18,7 +18,7 @@ public class SwimlaneController(Services.BoardController boardController, Kanban
     [HttpPost]
     public async Task<IActionResult> CreateNewSwimlane(string swimlaneName)
     {
-        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         var newSwimlane = new Swimlane()
         {
@@ -42,7 +42,7 @@ public class SwimlaneController(Services.BoardController boardController, Kanban
     [HttpDelete]
     public async Task<IActionResult> DeleteSwimlane([FromQuery] int swimlaneId)
     {
-        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
 
         var swimlaneToDelete = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
@@ -64,7 +64,7 @@ public class SwimlaneController(Services.BoardController boardController, Kanban
     [HttpPatch]
     public async Task<IActionResult> UpdateSwimlaneTitle([FromQuery] int swimlaneId, [FromQuery] string newSwimlaneName)
     {
-        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         
         var swimlaneToUpdate = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);

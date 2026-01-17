@@ -6,7 +6,7 @@ using Taskr.Models;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class CardController(Services.BoardController boardController, KanbanDbContext dbContext) : Controller
+public class CardController(Services.BoardService boardService, KanbanDbContext dbContext) : Controller
 {
     /// <summary>
     /// Creates a new card in the specified swimlane
@@ -21,7 +21,7 @@ public class CardController(Services.BoardController boardController, KanbanDbCo
         // Check the model state and make sure it's valid
         if (!ModelState.IsValid) return BadRequest(ModelState);
         
-        var board = await boardController.GetOrCreateCurrentUserKanbanBoardAsync();
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
         
         var currentSwimlane = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);

@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Taskr-45753434-00e1-465d-8dc4-9b55b9b04913</UserSecretsId>
+        <DefaultItemExcludes>$(DefaultItemExcludes);Taskr.Tests\**</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,30 +13,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="8.8.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.1" />
-        <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="xunit" Version="2.9.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\Validation\" />
       <Folder Include="Services\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\Debug\net10.0\KanbanBoard.Tests.sourcelink.json" />
-      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\KanbanBoard.Tests.csproj.nuget.dgspec.json" />
-      <_ContentIncludedByDefault Remove="KanbanBoard.Tests\obj\project.assets.json" />
     </ItemGroup>
 
 </Project>

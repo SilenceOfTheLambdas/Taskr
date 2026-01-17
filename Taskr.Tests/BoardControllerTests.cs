@@ -1,14 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Taskr.Models.User;
-using Moq;
-using Taskr.Data;
+﻿using Microsoft.EntityFrameworkCore;
 using Taskr.Services;
-using Xunit;
-using Microsoft.AspNetCore.Http;
 
-namespace Taskr.KanbanBoard.Tests;
+namespace Taskr.Tests;
 
 public class BoardControllerTests
 {
@@ -25,7 +18,7 @@ public class BoardControllerTests
         var db = TestsHelper.CreateInMemoryDb();
 
         // Instantiate the service under test
-        var boardService = new BoardController(db, userManager, httpContextAccessor);
+        var boardService = new BoardService(db, userManager, httpContextAccessor);
 
         // ---------- Act ----------
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
