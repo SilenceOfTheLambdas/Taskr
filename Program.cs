@@ -14,7 +14,7 @@ else
 {
     var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
         ?? throw new InvalidOperationException("AZURE_SQL_CONNECTIONSTRING connection string not found.");
-    
+
     builder.Services.AddDbContext<KanbanDbContext>(options =>
         options.UseSqlServer(connectionString));
 }
@@ -22,7 +22,6 @@ else
 // Set up ASP.Net Identity system
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     {
-        // ---- Password policy (feel free to relax for a demo) ----
         options.Password.RequireDigit = false;
         options.Password.RequiredLength = 6;
         options.Password.RequireNonAlphanumeric = false;
