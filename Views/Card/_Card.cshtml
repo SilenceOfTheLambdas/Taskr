@@ -2,22 +2,25 @@
     var card = (Card)ViewData["Card"]!;
 }
 
-<div class="card border-light bg-dark text-light mb-3">
+<div class="card border-light bg-dark text-light mb-3 CardDragItem--isDraggable" data-card-id="@card.Id">
     <div class="card-header d-flex justify-content-between" style="max-height: fit-content;">
-        <div><h4>@card.Title</h4></div>
+        <div>
+            <h4>@card.Title</h4>
+        </div>
         <!-- Example split danger button -->
         <div class="btn-group" style="max-height: 40px;">
-            <button type="button" class="btn btn-sm btn-outline-secondary text-secondary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#updateCardModel-@card.Id">Edit</button>
-            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" 
-                    data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-sm btn-outline-secondary text-secondary" data-bs-toggle="modal"
+                data-bs-target="#updateCardModel-@card.Id">Edit</button>
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-                <li><form id="delete-card-form" class="delete-card-form" data-card-id="@card.Id">
-                    <button class="btn btn-light" style="width: 100%" type="submit">Delete</button>
-                </form></li>
+                <li>
+                    <form id="delete-card-form" class="delete-card-form" data-card-id="@card.Id">
+                        <button class="btn btn-light" style="width: 100%" type="submit">Delete</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
