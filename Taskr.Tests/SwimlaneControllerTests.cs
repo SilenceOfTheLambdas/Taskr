@@ -1,45 +1,62 @@
-using Taskr.Models;
-using Taskr.Services;
+using System.Net;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Taskr.Data;
+using Taskr.Tests.Helper;
 
 namespace Taskr.Tests;
 
-public class SwimlaneControllerTests
+public class SwimlaneControllerTests(TaskrWebApplicationFactory factory) : IClassFixture<TaskrWebApplicationFactory>
 {
-    [Fact]
-    public async Task TestSwimlaneCreation()
+    private readonly HttpClient _client = factory.CreateClient(new WebApplicationFactoryClientOptions
     {
-        // ---------- Arrange ----------
-        // Create a fake user that will act as the logged‑in user
-        var fakeUser = TestsHelper.CreateTestUser();
+        AllowAutoRedirect = false
+    });
 
-        // Mock the dependencies
-        var userManager = TestsHelper.MockUserManager(fakeUser);
-        var httpContextAccessor = TestsHelper.MockHttpContextAccessor();
-        var db = TestsHelper.CreateInMemoryDb();
+    [Fact]
+    public async Task CreateNewSwimlane_ReturnsCreated_AndSavesToDb()
+    {
+        // Arrange
+        await factory.SeedTestDataAsync();
+        const string newSwimlaneName = "Testing Lane";
+        
+        // Act
+        var response = await _client.PostAsync($"Swimlane/CreateNewSwimlane?swimlaneName={newSwimlaneName}", null);
 
-        // Instantiate the service under test
-        var boardService = new BoardService(db, userManager, httpContextAccessor);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        
+        // Verify database state
+        using var scope = factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<KanbanDbContext>();
+        var swimlane = await db.Swimlanes.FirstOrDefaultAsync(s => s.Name == newSwimlaneName);
+        
+        swimlane.Should().NotBeNull();
+        swimlane.Name.Should().Be(newSwimlaneName);
+    }
 
-        // ---------- Act ----------
-        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+    [Fact]
+    public async Task DeleteSwimlane_ReturnsNoContent_WhenSuccessful()
+    {
+        // Arrange
+        await factory.SeedTestDataAsync();
+        using var scope = factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<KanbanDbContext>();
+        var swimlane = await db.Swimlanes.FirstAsync();
         
-        // Make sure we actually got a board back
-        Assert.NotNull(board);
+        var swimlaneId = swimlane.Id;
         
-        var newSwimlane = new Swimlane()
-        {
-            Board = board,
-            BoardId = board.Id,
-            Name = "Test Swimlane",
-            Position = board.Swimlanes.LastOrDefault()!.Position + 1
-        };
-        db.Add(newSwimlane);
-        await db.SaveChangesAsync();
+        // Act
+        var response = await _client.DeleteAsync($"Swimlane/DeleteSwimlane?swimlaneId={swimlaneId}");
         
-        // Assert that the swimlane was created successfully
-        Assert.Equal(4, board.Swimlanes.Count);
-        
-        // and then make sure the last swimlane has the expected name
-        Assert.Equal("Test Swimlane", board.Swimlanes.Last().Name);
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Verify database state
+        using var verifyScope = factory.Services.CreateScope();
+        var verifyDb = verifyScope.ServiceProvider.GetRequiredService<KanbanDbContext>();
+        (await verifyDb.Swimlanes.AnyAsync(s => s.Id == swimlaneId)).Should().BeFalse();
     }
 }

@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Taskr.Data;
 using Taskr.Models.User;
-using Taskr.Services;
 
-namespace Taskr.Tests;
+namespace Taskr.Tests.Helper;
 
 public static class TestsHelper
 {
@@ -17,7 +16,7 @@ public static class TestsHelper
         var store = new Mock<IUserStore<AppUser>>();
         var mgr = new Mock<UserManager<AppUser>>(
             store.Object,
-            null, null, null, null, null, null, null, null);
+            null!, null!, null!, null!, null!, null!, null!, null!);
 
         // GetUserAsync is called with the HttpContext's ClaimsPrincipal.
         // We'll make it ignore the principal and always return the supplied user.
@@ -65,21 +64,5 @@ public static class TestsHelper
             Email = "test.user@example.com",
             EmailConfirmed = true
         };
-    }
-    
-    public static void SetupEnvironment(out AppUser fakeUser, out UserManager<AppUser> userManager,
-        out IHttpContextAccessor httpContextAccessor, out KanbanDbContext db, out BoardService boardService)
-    {
-        // ---------- Arrange ----------
-        // Create a fake user that will act as the logged‑in user
-        fakeUser = CreateTestUser();
-
-        // Mock the dependencies
-        userManager = MockUserManager(fakeUser);
-        httpContextAccessor = MockHttpContextAccessor();
-        db = CreateInMemoryDb();
-
-        // Instantiate the service under test
-        boardService = new BoardService(db, userManager, httpContextAccessor);
     }
 }

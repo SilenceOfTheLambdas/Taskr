@@ -2,7 +2,7 @@
 
 <div class="row flex-nowrap g-4 pb-3" style="width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden;">
 
-    @foreach (var swimlane in Model.Swimlanes)
+    @foreach (var swimlane in Model.Swimlanes.OrderBy(s => s.Position))
     {
         <div class="col-10 col-sm-6 col-md-4 col-lg-3" style="min-width: 380px; max-width: 380px; height: 100%;">
             <div class="card h-100 text-bg-dark">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="card-body">
                     <div class="card-body card-container CardDragDropContainer" data-swimlane-id="@swimlane.Id">
-                        @foreach (var card in swimlane.Cards)
+                        @foreach (var card in swimlane.Cards.OrderBy(c => c.Position))
                         {
                             <partial name="../Card/_Card" view-data='@new ViewDataDictionary(ViewData) { { "Card", card } }' />
                             // Update Card Modal
@@ -41,11 +41,12 @@
                 </div>
             </div>
         </div>
-        <partial name="../Card/_Create" view-data='@new ViewDataDictionary(ViewData) {
-                                     {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
-        <partial name="../Swimlane/_DeleteSwimlane"
-            view-data='@new ViewDataDictionary(ViewData) { {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
-    }
+        <partial name="../Card/_Create"
+            view-data='@new ViewDataDictionary(ViewData) {
+                                                                                                 {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }' />
+    <partial name="../Swimlane/_DeleteSwimlane"
+        view-data='@new ViewDataDictionary(ViewData) { { "SwimlaneId", swimlane.Id }, { "SwimlaneName", swimlane.Name } }' />
+        }
     @* New Swimlane Button *@
     <div class="col-md-auto rounded" style="margin: 1rem">
         <div class="container p-0">

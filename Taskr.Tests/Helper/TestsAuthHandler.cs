@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Taskr.Tests;
+namespace Taskr.Tests.Helper;
 
 public class TestsAuthHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,

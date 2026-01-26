@@ -7,7 +7,7 @@ using Taskr.Services;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class SwimlaneController(Services.BoardService boardService, KanbanDbContext dbContext) : Controller
+public class SwimlaneController(BoardService boardService, KanbanDbContext dbContext) : Controller
 {
     // POST: /Swimlane/CreateNewSwimlane
     /// <summary>
