@@ -2,13 +2,13 @@
     var card = (Card)ViewData["Card"]!;
 }
 
-<div class="card border-light bg-dark text-light mb-3 CardDragItem--isDraggable" data-card-id="@card.Id">
-    <div class="card-header d-flex justify-content-between" style="max-height: fit-content;">
-        <div>
+<div class="card border-light bg-dark text-light mb-3 CardDragItem--isDraggable" style="z-index: 1000;max-width: 340px;" data-card-id="@card.Id">
+    <div class="card-header d-flex justify-content-between CardDragItem--handle" style="max-height: fit-content;">
+        <div class="CardDragItem--handle">
             <h4>@card.Title</h4>
         </div>
         <!-- Example split danger button -->
-        <div class="btn-group" style="max-height: 40px;">
+        <div class="btn-group" style="max-height: 40px; z-index: 1000;">
             <button type="button" class="btn btn-sm btn-outline-secondary text-secondary" data-bs-toggle="modal"
                 data-bs-target="#updateCardModel-@card.Id">Edit</button>
             <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
