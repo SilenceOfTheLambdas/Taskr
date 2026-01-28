@@ -8,7 +8,7 @@
 
 **Live Demo:** https://taskr-gafxdebgb7exdfd8.westeurope-01.azurewebsites.net/
 
-![img.png](img.png)
+![img.png](Taskr_Screenshot.png)
 
 ## 🛠 Tech Stack
 
@@ -27,7 +27,8 @@
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
-### Setup (Dev) *Will require your own SQL Server instance*
+### Setup (Dev)
+The data will be stored in a local in-memory database.
 
 1. **Clone the repository:**
    ```bash
@@ -40,31 +41,11 @@
    dotnet restore
    ```
 
-3. **Store Connection String in User Secrets:**
-   ```bash
-   dotnet user-secrets init
-   dotnet user-secrets set "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING" "Server=<Your SQL Server Instance>;Database=<Your Database Name>;User Id=<Your User Id>;Password=<>"
-   ```
-
-4. **Apply Database Migrations:**
-   ```bash
-   dotnet ef database update
-   ```
-
-5. **Run the application:**
+3. **Run the application:**
    ```bash
    dotnet run
    ```
    The application will be available at `https://localhost:7060` or `http://localhost:5176`.
 
-### Setup (Docker Compose)
-
-1. **Clone repository as previous step.**
-    2. You will need to have docker installed on your machine.
-    3. Like the previous step, you will need to adjust the connection string in the `docker-compose.yml` file.
-
-2. **Run the docker image**
-   ```bash
-   docker compose up --build
-   ```
-   The application will be available at `http://localhost`.
+### Docker
+Docker is used for deployment, however you can adjust the Dockerfile to Development if needed.
