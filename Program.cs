@@ -13,7 +13,8 @@ if (builder.Environment.IsDevelopment())
 else
 {
     var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")
-        ?? throw new InvalidOperationException("AZURE_SQL_CONNECTIONSTRING connection string not found.");
+                           ?? throw new InvalidOperationException(
+                               "AZURE_SQL_CONNECTIONSTRING connection string not found.");
 
     builder.Services.AddDbContext<KanbanDbContext>(options =>
         options.UseSqlServer(connectionString));
@@ -45,10 +46,7 @@ builder.Services.AddScoped<BoardService>();
 var app = builder.Build();
 
 // Standard middleware pipeline
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHsts();
-}
+if (!app.Environment.IsDevelopment()) app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -59,8 +57,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Board}/{action=Index}");
+    "default",
+    "{controller=Board}/{action=Index}");
 app.MapRazorPages();
 
 app.Run();

@@ -9,8 +9,8 @@ public class Board
     public int Id { get; init; }
     public string Title { get; init; } = "Kanban Board";
     public ICollection<Swimlane> Swimlanes { get; init; } = new List<Swimlane>();
-    
+
     public string? OwnerId { get; init; } = string.Empty;
-    
+
     public AppUser? Owner { get; init; }
 }

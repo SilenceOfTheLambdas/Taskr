@@ -25,7 +25,7 @@ public class BoardService(
 
         // GetUserAsync will return null if the principal has no NameIdentifier claim
         var user = await userManager.GetUserAsync(httpContext.User);
-        if (user == null) return null;   // unauthenticated – caller decides what to do
+        if (user == null) return null; // unauthenticated – caller decides what to do
 
         // Check to see if the current user has a board
         var board = await dbContext.Boards
@@ -36,48 +36,45 @@ public class BoardService(
         // If they don't, create one
         if (board == null)
         {
-            board = new Board()
+            board = new Board
             {
                 Title = $"{user.UserName}'s Board",
                 OwnerId = user.Id
             };
             dbContext.Add(board);
             await dbContext.SaveChangesAsync();
-            
+
             // Now create the default swimlanes for the board
             var swimlanes = CreateNewUserSwimlanes(board.Id);
 
-            foreach (var swimlane in swimlanes)
-            {
-                dbContext.Add(swimlane);
-            }
+            foreach (var swimlane in swimlanes) dbContext.Add(swimlane);
             await dbContext.SaveChangesAsync();
         }
-        
+
         return board;
     }
-    
+
     private List<Swimlane> CreateNewUserSwimlanes(int boardId)
     {
-        var backlogSwimlane = new Swimlane()
+        var backlogSwimlane = new Swimlane
         {
             Name = "Backlog",
             BoardId = boardId,
             Position = 0
         };
-        var todoSwimlane = new Swimlane()
+        var todoSwimlane = new Swimlane
         {
             Name = "To Do",
             BoardId = boardId,
             Position = 1
         };
-        var completedSwimlane = new Swimlane()
+        var completedSwimlane = new Swimlane
         {
             Name = "Completed",
             BoardId = boardId,
             Position = 2
         };
-        
+
         return [backlogSwimlane, todoSwimlane, completedSwimlane];
     }
 }

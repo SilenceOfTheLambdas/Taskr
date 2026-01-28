@@ -5,7 +5,7 @@ using Taskr.Services;
 namespace Taskr.Controllers;
 
 [Authorize]
-public class BoardController(Services.BoardService boardService) : Controller
+public class BoardController(BoardService boardService) : Controller
 {
     // GET: Index (Shows Kanban Board)
     public async Task<IActionResult> Index()

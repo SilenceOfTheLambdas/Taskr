@@ -1,7 +1,6 @@
 ﻿document.addEventListener('submit', async (e) => {
 
-    if (e.target && e.target.classList.contains('delete-card-form'))
-    {
+    if (e.target && e.target.classList.contains('delete-card-form')) {
         e.preventDefault();
 
         const form = e.target;
@@ -11,8 +10,7 @@
             method: 'DELETE'
         });
 
-        if (response.status === 204)
-        {
+        if (response.status === 204) {
             window.location.href = '/';
         } else {
             console.error("Deletion of Card failed :/", response.status);

@@ -1,9 +1,9 @@
 import {
-        Draggable,
-        Sortable,
-        Droppable,
-        Swappable,
-    } from 'https://cdn.jsdelivr.net/npm/@shopify/draggable/build/esm/index.mjs';
+    Draggable,
+    Sortable,
+    Droppable,
+    Swappable,
+} from 'https://cdn.jsdelivr.net/npm/@shopify/draggable/build/esm/index.mjs';
 
 const sortable = new Sortable(document.querySelectorAll('.CardDragDropContainer'), {
     draggable: '.CardDragItem--isDraggable',

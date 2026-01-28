@@ -4,7 +4,8 @@
     const int maxDescriptionLength = 500;
 }
 
-<div class="modal fade" id="updateCardModel-@card!.Id" tabindex="-1" aria-labelledby="updateCardModelLabel" aria-hidden="true">
+<div class="modal fade" id="updateCardModel-@card!.Id" tabindex="-1" aria-labelledby="updateCardModelLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,11 +16,13 @@
                 <form id="update-card-form-@card.Id" class="update-card-form" data-card-id="@card.Id">
                     <div class="mb-3">
                         <label for="card-title" class="col-form-label">Card Title:</label>
-                        <input type="text" class="form-control" id="card-title" maxlength="@maxTitleLength" value="@card.Title">
+                        <input type="text" class="form-control" id="card-title" maxlength="@maxTitleLength"
+                               value="@card.Title">
                     </div>
                     <div class="mb-3">
                         <label for="card-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" id="card-description" maxlength="@maxDescriptionLength">@card.Description</textarea>
+                        <textarea class="form-control" id="card-description"
+                                  maxlength="@maxDescriptionLength">@card.Description</textarea>
                     </div>
                 </form>
             </div>

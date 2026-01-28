@@ -1,13 +1,13 @@
 ﻿// Show Alerts
 function showAlert(message, type, persist = false) {
     if (persist) {
-        localStorage.setItem('pendingAlert', JSON.stringify( { message: message, type: type } ));
+        localStorage.setItem('pendingAlert', JSON.stringify({message: message, type: type}));
         return;
     }
-    
+
     const alertPlaceholder = document.getElementById('live-alert-placeholder')
     if (!alertPlaceholder) return;
-    
+
     const wrapper = document.createElement('div')
     wrapper.innerHTML = [
         `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`,
@@ -20,12 +20,12 @@ function showAlert(message, type, persist = false) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-   const pendingAlert = localStorage.getItem('pendingAlert');
-   if (pendingAlert) {
-       const { message, type } = JSON.parse(pendingAlert);
-       showAlert(message, type);
-       localStorage.removeItem('pendingAlert');
-   }
+    const pendingAlert = localStorage.getItem('pendingAlert');
+    if (pendingAlert) {
+        const {message, type} = JSON.parse(pendingAlert);
+        showAlert(message, type);
+        localStorage.removeItem('pendingAlert');
+    }
 });
 
 const addBtn = document.getElementById('add-swimlane-btn');

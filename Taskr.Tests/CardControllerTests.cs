@@ -15,17 +15,8 @@ public class CardControllerTests(TaskrWebApplicationFactory factory) : IClassFix
     {
         AllowAutoRedirect = false
     });
-
-    /// <summary>
-    /// Tests the creation of a new card by ensuring that the operation returns a successful response
-    /// and the card is persisted to the database.
-    /// The method initialises test data including a user and associated board, performs a POST request to the
-    /// Card/CreateNewCard endpoint, and verifies the creation of the card.
-    /// </summary>
-    /// <returns>
-    /// An asynchronous task that completes when the test is finished. Ensures the HTTP response status is "Created".
-    /// </returns>
-    [Fact]
+    
+    [Fact(DisplayName = "Create New Card")]
     public async Task CreateNewCard_ReturnsSuccess_AndSaveToDb()
     {
         // Arrange
@@ -56,7 +47,7 @@ public class CardControllerTests(TaskrWebApplicationFactory factory) : IClassFix
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 
-    [Fact]
+    [Fact(DisplayName = "Move Card")]
     public async Task MoveCard_UpdatesPositionAndSwimlane()
     {
         // Arrange

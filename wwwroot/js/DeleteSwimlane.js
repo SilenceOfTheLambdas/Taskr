@@ -1,7 +1,6 @@
 document.addEventListener('submit', async (e) => {
 
-    if (e.target && e.target.classList.contains('delete-swimlane-form'))
-    {
+    if (e.target && e.target.classList.contains('delete-swimlane-form')) {
         e.preventDefault();
 
         const form = e.target;
@@ -12,8 +11,7 @@ document.addEventListener('submit', async (e) => {
                 method: 'DELETE'
             });
 
-            if (response.status === 204)
-            {
+            if (response.status === 204) {
                 window.location.href = '/';
             } else {
                 console.error("Deletion of swimlane failed :/", response.status);
@@ -21,6 +19,6 @@ document.addEventListener('submit', async (e) => {
         } catch (error) {
             console.error("Deletion of swimlane failed :/", error);
         }
-        
+
     }
 });

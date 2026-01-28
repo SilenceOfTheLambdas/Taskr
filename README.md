@@ -60,8 +60,8 @@
 ### Setup (Docker Compose)
 
 1. **Clone repository as previous step.**
-   2. You will need to have docker installed on your machine.
-   3. Like the previous step, you will need to adjust the connection string in the `docker-compose.yml` file.
+    2. You will need to have docker installed on your machine.
+    3. Like the previous step, you will need to adjust the connection string in the `docker-compose.yml` file.
 
 2. **Run the docker image**
    ```bash

@@ -17,7 +17,8 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
     /// <param name="cardDescription">Description of the card</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateNewCard(int swimlaneId, [FromForm] string cardTitle, [FromForm] string? cardDescription)
+    public async Task<IActionResult> CreateNewCard(int swimlaneId, [FromForm] string cardTitle,
+        [FromForm] string? cardDescription)
     {
         // Check the model state and make sure it's valid
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -28,7 +29,7 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
         var currentSwimlane = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
         if (currentSwimlane == null) return BadRequest();
 
-        var newCard = new Card()
+        var newCard = new Card
         {
             Swimlane = currentSwimlane,
             SwimlaneId = currentSwimlane.Id,
@@ -51,7 +52,8 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
     /// <param name="cardDescription"></param>
     /// <returns>204 if the update is successful, 404 if a card could not be found.</returns>
     [HttpPatch]
-    public async Task<IActionResult> UpdateCardDetails([FromQuery] int cardId, [FromForm] string cardTitle, [FromForm] string? cardDescription)
+    public async Task<IActionResult> UpdateCardDetails([FromQuery] int cardId, [FromForm] string cardTitle,
+        [FromForm] string? cardDescription)
     {
         // Check the model state and make sure it's valid
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -94,7 +96,7 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
 
         return StatusCode(204);
     }
-    
+
     /// <summary>
     /// Moves a card to a new swimlane and/or a new position within a swimlane.
     /// </summary>
@@ -103,7 +105,8 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
     /// <param name="newPosition">The new 0-indexed position within the swimlane.</param>
     /// <returns>204 No Content if successful, or error codes.</returns>
     [HttpPatch]
-    public async Task<IActionResult> MoveCard([FromQuery] int cardId, [FromQuery] int newSwimlaneId, [FromQuery] int newPosition)
+    public async Task<IActionResult> MoveCard([FromQuery] int cardId, [FromQuery] int newSwimlaneId,
+        [FromQuery] int newPosition)
     {
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
@@ -111,11 +114,9 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
         var card = await dbContext.Cards.FindAsync(cardId);
         if (card == null) return NotFound();
 
-        if (board.Swimlanes.All(s => s.Id != card.SwimlaneId) 
+        if (board.Swimlanes.All(s => s.Id != card.SwimlaneId)
             || board.Swimlanes.All(s => s.Id != newSwimlaneId))
-        {
             return BadRequest();
-        }
 
         var oldSwimlaneId = card.SwimlaneId;
 
@@ -129,10 +130,7 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
             var cards = allCardsInAffectedSwimlanes.OrderBy(c => c.Position).ToList();
             cards.RemoveAll(c => c.Id == card.Id);
             cards.Insert(Math.Clamp(newPosition, 0, cards.Count), card);
-            for (var i = 0; i < cards.Count; i++)
-            {
-                cards[i].Position = i + 1;
-            }
+            for (var i = 0; i < cards.Count; i++) cards[i].Position = i + 1;
         }
         else // If a card has been moved to a different swimlane
         {
@@ -141,10 +139,7 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
             var oldCards = allCardsInAffectedSwimlanes.Where(c => c.SwimlaneId == oldSwimlaneId)
                 .OrderBy(c => c.Position).ToList();
             oldCards.RemoveAll(c => c.Id == card.Id);
-            for (var i = 0; i < oldCards.Count; i++)
-            {
-                oldCards[i].Position = i + 1;
-            }
+            for (var i = 0; i < oldCards.Count; i++) oldCards[i].Position = i + 1;
 
             // Destination Swimlane: It updates the card's SwimlaneId to the new ID, inserts it at the specified
             // newPosition, and then re-indexes all cards in the destination swimlane to accommodate the new arrival.
@@ -152,10 +147,7 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
                 .OrderBy(c => c.Position).ToList();
             card.SwimlaneId = newSwimlaneId;
             newCards.Insert(Math.Clamp(newPosition, 0, newCards.Count), card);
-            for (var i = 0; i < newCards.Count; i++)
-            {
-                newCards[i].Position = i + 1;
-            }
+            for (var i = 0; i < newCards.Count; i++) newCards[i].Position = i + 1;
         }
 
         await dbContext.SaveChangesAsync();

@@ -15,20 +15,20 @@ public class KanbanDbContext(DbContextOptions<KanbanDbContext> options) : Identi
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.Entity<AppUser>()
             .HasOne(u => u.Board)
             .WithOne(b => b.Owner)
             .HasForeignKey<Board>(b => b.OwnerId)
             .IsRequired(true)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<Swimlane>()
             .HasOne(s => s.Board)
             .WithMany(b => b.Swimlanes)
             .HasForeignKey(s => s.BoardId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<Card>()
             .HasOne(c => c.Swimlane)
             .WithMany(s => s.Cards)

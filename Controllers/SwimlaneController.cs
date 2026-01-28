@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Taskr.Data;
 using Taskr.Models;
 using Taskr.Services;
@@ -11,7 +12,7 @@ public class SwimlaneController(BoardService boardService, KanbanDbContext dbCon
 {
     // POST: /Swimlane/CreateNewSwimlane
     /// <summary>
-    /// Creates a new swimlane for the current user's board
+    ///     Creates a new swimlane for the current user's board
     /// </summary>
     /// <param name="swimlaneName">The name of the new Swimlane</param>
     /// <returns>Status 201 if created.</returns>
@@ -20,7 +21,7 @@ public class SwimlaneController(BoardService boardService, KanbanDbContext dbCon
     {
         var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
         if (board == null) return Challenge();
-        var newSwimlane = new Swimlane()
+        var newSwimlane = new Swimlane
         {
             Board = board,
             BoardId = board.Id,
@@ -29,16 +30,74 @@ public class SwimlaneController(BoardService boardService, KanbanDbContext dbCon
         };
         dbContext.Add(newSwimlane);
         await dbContext.SaveChangesAsync();
-        
+
         return StatusCode(201);
     }
 
     /// <summary>
-    /// Removes a swimlane from the board with a given swimlane ID
+    ///     Performs a HttpPATCH request to update the name of a swimlane with a given swimlane ID
+    /// </summary>
+    /// <param name="swimlaneId">The ID of the swimlane to update</param>
+    /// <param name="newSwimlaneName">The new name of the swimlane</param>
+    /// <returns>
+    ///     204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
+    ///     a matching swimlaneId is located in the board.
+    /// </returns>
+    [HttpPatch]
+    public async Task<IActionResult> UpdateSwimlaneTitle([FromQuery] int swimlaneId, [FromQuery] string newSwimlaneName)
+    {
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        if (board == null) return Challenge();
+
+        var swimlaneToUpdate = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
+        if (swimlaneToUpdate == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
+
+        swimlaneToUpdate.Name = newSwimlaneName;
+        await dbContext.SaveChangesAsync();
+
+        return StatusCode(204);
+    }
+
+    /// <summary>
+    ///     Updates the position of a swimlane on the user's kanban board.
+    /// </summary>
+    /// <param name="swimlaneId">The unique identifier of the swimlane to update.</param>
+    /// <param name="newPosition">The new position index for the swimlane within the board's swimlane list.</param>
+    /// <returns>
+    ///     Returns an HTTP 204 status code if the position update is successful, or an appropriate error response if the
+    ///     update fails.
+    /// </returns>
+    [HttpPatch]
+    public async Task<IActionResult> UpdateSwimlanePosition([FromQuery] int swimlaneId, [FromQuery] int newPosition)
+    {
+        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
+        if (board == null) return Challenge();
+
+        var swimlaneToUpdate = await dbContext.Swimlanes.FirstOrDefaultAsync(s => s.Id == swimlaneId);
+        if (swimlaneToUpdate == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
+
+
+        var swimlanes = dbContext.Swimlanes.OrderBy(c => c.Position).ToList();
+        swimlanes.RemoveAll(s => s.Id == swimlaneToUpdate.Id);
+
+        // Place the moved swimlane in the new position
+        swimlanes.Insert(Math.Clamp(newPosition, 0, swimlanes.Count), swimlaneToUpdate);
+
+        // Then update the positions of the remaining swimlanes
+        for (var i = 0; i < swimlanes.Count; i++) swimlanes[i].Position = i + 1;
+
+        await dbContext.SaveChangesAsync();
+        return StatusCode(204);
+    }
+
+    /// <summary>
+    ///     Removes a swimlane from the board with a given swimlane ID
     /// </summary>
     /// <param name="swimlaneId">The ID of the swimlane</param>
-    /// <returns>204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
-    /// a matching swimlaneId is located in the board.</returns>
+    /// <returns>
+    ///     204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
+    ///     a matching swimlaneId is located in the board.
+    /// </returns>
     [HttpDelete]
     public async Task<IActionResult> DeleteSwimlane([FromQuery] int swimlaneId)
     {
@@ -47,32 +106,10 @@ public class SwimlaneController(BoardService boardService, KanbanDbContext dbCon
 
         var swimlaneToDelete = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
         if (swimlaneToDelete == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
-        
+
         board.Swimlanes.Remove(swimlaneToDelete);
         await dbContext.SaveChangesAsync();
-        
-        return StatusCode(204);
-    }
 
-    /// <summary>
-    /// Performs a HttpPATCH request to update the name of a swimlane with a given swimlane ID
-    /// </summary>
-    /// <param name="swimlaneId">The ID of the swimlane to update</param>
-    /// <param name="newSwimlaneName">The new name of the swimlane</param>
-    /// <returns>204 if successful, A Challenge() if no board is found, and 400 if no swimlane with
-    /// a matching swimlaneId is located in the board.</returns>
-    [HttpPatch]
-    public async Task<IActionResult> UpdateSwimlaneTitle([FromQuery] int swimlaneId, [FromQuery] string newSwimlaneName)
-    {
-        var board = await boardService.GetOrCreateCurrentUserKanbanBoardAsync();
-        if (board == null) return Challenge();
-        
-        var swimlaneToUpdate = board.Swimlanes.FirstOrDefault(s => s.Id == swimlaneId);
-        if (swimlaneToUpdate == null) return BadRequest($"Could not find swimlane with id: {swimlaneId}");
-        
-        swimlaneToUpdate.Name = newSwimlaneName;
-        await dbContext.SaveChangesAsync();
-        
         return StatusCode(204);
     }
 }
