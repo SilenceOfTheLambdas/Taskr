@@ -111,15 +111,6 @@ public static class ManageNavPages
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public static string ExternalLoginsNavClass(ViewContext viewContext)
-    {
-        return PageNavClass(viewContext, ExternalLogins);
-    }
-
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public static string PersonalDataNavClass(ViewContext viewContext)
     {
         return PageNavClass(viewContext, PersonalData);
