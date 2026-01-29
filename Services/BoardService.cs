@@ -46,8 +46,18 @@ public class BoardService(
 
             // Now create the default swimlanes for the board
             var swimlanes = CreateNewUserSwimlanes(board.Id);
+            
+            // Create example cards
+            var cards = CreateNewUserCards(swimlanes.First().Id);
 
             foreach (var swimlane in swimlanes) dbContext.Add(swimlane);
+            await dbContext.SaveChangesAsync();
+
+            foreach (var card in cards)
+            {
+                board.Swimlanes.First().Cards.Add(card);
+                dbContext.Add(card);
+            }
             await dbContext.SaveChangesAsync();
         }
 
@@ -60,21 +70,47 @@ public class BoardService(
         {
             Name = "Backlog",
             BoardId = boardId,
-            Position = 0
+            Position = 1
         };
         var todoSwimlane = new Swimlane
         {
             Name = "To Do",
             BoardId = boardId,
-            Position = 1
+            Position = 2
         };
         var completedSwimlane = new Swimlane
         {
             Name = "Completed",
             BoardId = boardId,
-            Position = 2
+            Position = 3
         };
 
         return [backlogSwimlane, todoSwimlane, completedSwimlane];
+    }
+
+    private List<Card> CreateNewUserCards(int swimlaneId)
+    {
+        var card1 = new Card
+        {
+            CreatedAt = DateTime.UtcNow.Date.Date,
+            Description =
+                "This is a card, you can drag me around and move me to different swimlanes or adjust the order.",
+            Id = 1,
+            Position = 1,
+            SwimlaneId = swimlaneId,
+            Title = "Welcome to Taskr!"
+        };
+        var card2 = new Card
+        {
+            CreatedAt = DateTime.UtcNow.Date.Date,
+            Description =
+                "This is a card, you can drag me around and move me to different swimlanes or adjust the order.",
+            Id = 2,
+            Position = 2,
+            SwimlaneId = swimlaneId,
+            Title = "Welcome to Taskr!"
+        };
+        
+        return [card1, card2];
     }
 }

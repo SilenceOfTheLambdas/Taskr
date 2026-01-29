@@ -1,9 +1,6 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Moq;
-using Taskr.Data;
 using Taskr.Models.User;
 
 namespace Taskr.Tests.Helper;
@@ -24,31 +21,6 @@ public static class TestsHelper
             .ReturnsAsync(user);
 
         return mgr.Object;
-    }
-
-    public static IHttpContextAccessor MockHttpContextAccessor()
-    {
-        var httpContext = new DefaultHttpContext
-        {
-            User = new ClaimsPrincipal(new ClaimsIdentity()) // empty identity – fine for the mock
-        };
-
-        var accessorMock = new Mock<IHttpContextAccessor>();
-        accessorMock.Setup(a => a.HttpContext).Returns(httpContext);
-        return accessorMock.Object;
-    }
-
-    /// Helper to spin up an in‑memory DbContext
-    public static KanbanDbContext CreateInMemoryDb()
-    {
-        var options = new DbContextOptionsBuilder<KanbanDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString()) // fresh DB per test
-            .Options;
-
-        var ctx = new KanbanDbContext(options);
-        // Ensure the schema is created (EF Core does this lazily, but we force it)
-        ctx.Database.EnsureCreated();
-        return ctx;
     }
 
     /// <summary>

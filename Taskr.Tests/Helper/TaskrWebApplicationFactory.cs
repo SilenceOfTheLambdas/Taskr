@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Taskr.Data;
 using Taskr.Models;
+using Taskr.Models.User;
+using Taskr.Services;
 
 namespace Taskr.Tests.Helper;
 
