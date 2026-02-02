@@ -29,3 +29,16 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* Adding white border around QR code to fix scanning issues in Authenticator apps. */
+#qrCode {
+    background-color: white;
+    padding: 15px;
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+#qrCode img {
+    display: block;
+}
