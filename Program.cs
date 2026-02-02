@@ -17,7 +17,9 @@ else
                                "AZURE_SQL_CONNECTIONSTRING connection string not found.");
 
     builder.Services.AddDbContext<KanbanDbContext>(options =>
-        options.UseSqlServer(connectionString));
+    {
+        options.UseSqlServer(connectionString, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
+    });
 }
 
 // Set up ASP.Net Identity system
