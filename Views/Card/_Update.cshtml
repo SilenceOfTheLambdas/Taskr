@@ -1,12 +1,12 @@
 @{
     var card = ViewData["Card"] as Card;
     const int maxTitleLength = 40;
-    const int maxDescriptionLength = 500;
+    const int maxDescriptionLength = 2000;
 }
 
 <div class="modal fade" id="updateCardModel-@card!.Id" tabindex="-1" aria-labelledby="updateCardModelLabel"
      aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="updateCardModelLabel">Update Card</h1>
@@ -14,20 +14,20 @@
             </div>
             <div class="modal-body">
                 <form id="update-card-form-@card.Id" class="update-card-form" data-card-id="@card.Id">
-                    <div class="mb-3">
+                    <div class="mb-3 form-floating">
+                        <input type="text" class="form-control" placeholder="@card.Title" id="card-title" maxlength="@maxTitleLength" value="@card.Title">
                         <label for="card-title" class="col-form-label">Card Title:</label>
-                        <input type="text" class="form-control" id="card-title" maxlength="@maxTitleLength"
-                               value="@card.Title">
                     </div>
-                    <div class="mb-3">
-                        <label for="card-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control markdown-input" id="card-description"
-                                  maxlength="@maxDescriptionLength">@card.Description</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-form-label">Preview:</label>
-                        <div class="markdown-preview border rounded p-2 bg-dark text-light" 
-                             style="min-height: 100px; max-height: 200px; overflow-y: auto;">
+                    <div class="row">
+                        <div class="mb-3 col form-floating" style="min-height: 550px; max-height: 550px; overflow: auto;">
+                            <textarea class="form-control markdown-input" id="card-description" placeholder="Edit description..."
+                                maxlength="@maxDescriptionLength" style="height: 100%; overflow: auto; resize: none">@card.Description</textarea>
+                            <label for="card-description">Description</label>
+                        </div>
+                        <div class="mb-3 col" style="min-height: 550px; max-height: 550px; overflow: auto;">
+                            <div class="markdown-preview border rounded p-2 bg-dark text-light" 
+                                 style="min-height: 550px; max-height: 550px; overflow-y: auto;">
+                            </div>
                         </div>
                     </div>
                 </form>

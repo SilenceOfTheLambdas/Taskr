@@ -2,12 +2,12 @@
     var swimlaneId = ViewData["SwimlaneId"];
     var swimlaneName = ViewData["SwimlaneName"];
     const int maxTitleLength = 40;
-    const int maxDescriptionLength = 500;
+    const int maxDescriptionLength = 2000;
 }
 
 <div class="modal fade" id="createCardModel-@swimlaneId" tabindex="-1" aria-labelledby="createCardModelLabel"
      aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="createCardModelLabel">New Card in @swimlaneName</h1>
@@ -15,14 +15,21 @@
             </div>
             <div class="modal-body">
                 <form id="create-card-form-@swimlaneId" class="create-card-form" data-swimlane-id="@swimlaneId">
-                    <div class="mb-3">
+                    <div class="mb-3 form-floating">
+                        <input type="text" placeholder="New Task" class="form-control" id="card-title" required maxlength="@maxTitleLength">
                         <label for="card-title" class="col-form-label">Card Title:</label>
-                        <input type="text" class="form-control" id="card-title" required maxlength="@maxTitleLength">
                     </div>
-                    <div class="mb-3">
-                        <label for="card-description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" id="card-description"
-                                  maxlength="@maxDescriptionLength"></textarea>
+                    <div class="row">
+                        <div class="mb-3 col form-floating" style="min-height: 550px; max-height: 550px; overflow-y: auto;">
+                            <textarea class="form-control markdown-input" id="card-description" placeholder="Enter description..."
+                                maxlength="@maxDescriptionLength" style="height: 550px; resize: none"></textarea>
+                            <label for="card-description">Description</label>
+                        </div>
+                        <div class="mb-3 col" style="min-height: 550px; max-height: 550px; overflow-y: auto;">
+                            <div class="markdown-preview border rounded p-2 bg-dark text-light" 
+                                 style="min-height: 550px; max-height: 550px; overflow-y: auto;">
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

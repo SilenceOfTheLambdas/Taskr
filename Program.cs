@@ -8,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddDbContext<KanbanDbContext>(options => options.UseInMemoryDatabase("TestDatabase"));
+    builder.Services.AddDbContext<KanbanDbContext>(options =>
+    {
+        options.UseInMemoryDatabase("TestDatabase");
+    });
 }
 else
 {
