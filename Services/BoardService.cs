@@ -104,11 +104,11 @@ public class BoardService(
         {
             CreatedAt = DateTime.UtcNow.Date.Date,
             Description =
-                "This is a card, you can drag me around and move me to different swimlanes or adjust the order.",
+                "# Header \nCards also have markdown support for descriptions!",
             Id = 2,
             Position = 2,
             SwimlaneId = swimlaneId,
-            Title = "Welcome to Taskr!"
+            Title = "Markdown Support"
         };
         
         return [card1, card2];
