@@ -7,7 +7,7 @@ public class Swimlane
     public int Id { get; init; }
 
     [Required]
-    [StringLength(20, MinimumLength = 1, ErrorMessage = "Swimlane name must be between 1 and 20 characters long.")]
+    [StringLength(50, MinimumLength = 1, ErrorMessage = "Swimlane name must be between 1 and 50 characters long.")]
     public string Name { get; set; } = string.Empty;
 
     public int Position { get; set; } // Ordering of swimlanes

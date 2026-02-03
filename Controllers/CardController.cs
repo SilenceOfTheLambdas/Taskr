@@ -155,6 +155,31 @@ public class CardController(Services.BoardService boardService, KanbanDbContext 
     }
 
     /// <summary>
+    /// Assigns an existing tag to a specified card.
+    /// </summary>
+    /// <param name="cardId">The ID of the card to which the tag will be assigned.</param>
+    /// <param name="tagId">The ID of the tag to assign to the card.</param>
+    /// <returns>An IActionResult representing the outcome of the operation.</returns>
+    [HttpPost]
+    public async Task<IActionResult> AssignExistingTagToCard(int cardId, int tagId)
+    {
+        var board = await dbContext.Boards.Include(board => board.Tags).FirstOrDefaultAsync();
+        if (board == null) return NotFound();
+        
+        var card = await dbContext.Cards.Include(c => c.AssignedTags)
+            .Where(c => c.Id == cardId).FirstOrDefaultAsync();
+        if (card == null) return NotFound();
+        
+        var tag = board.Tags.FirstOrDefault(t => t.Id == tagId);
+        if (tag == null) return NotFound();
+        
+        card.AssignedTags.Add(tag);
+        await dbContext.SaveChangesAsync();
+        
+        return StatusCode(201, tag);
+    }
+
+    /// <summary>
     /// Deletes a card from the database
     /// </summary>
     /// <param name="cardId">The ID of the card to delete.</param>

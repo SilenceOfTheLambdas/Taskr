@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Taskr.Models;
+using Taskr.Models.Tag;
 using Taskr.Models.User;
 
 namespace Taskr.Data;
@@ -20,7 +21,7 @@ public class KanbanDbContext(DbContextOptions<KanbanDbContext> options) : Identi
             .HasOne(u => u.Board)
             .WithOne(b => b.Owner)
             .HasForeignKey<Board>(b => b.OwnerId)
-            .IsRequired(true)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Swimlane>()

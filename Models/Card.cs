@@ -22,4 +22,13 @@ public class Card
     public int SwimlaneId { get; set; }
 
     public Swimlane? Swimlane { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of tags associated with the card.
+    /// </summary>
+    /// <remarks>
+    /// This property represents the collection of tags assigned to a specific card.
+    /// Each tag provides a way to categorise or identify the card within the system.
+    /// </remarks>
+    public List<Tag.Tag> AssignedTags { get; set; } = [];
 }

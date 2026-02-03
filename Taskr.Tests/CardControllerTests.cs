@@ -1,10 +1,12 @@
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Taskr.Data;
 using Taskr.Models;
+using Taskr.Models.Tag;
 using Taskr.Tests.Helper;
 
 namespace Taskr.Tests;
@@ -95,5 +97,45 @@ public class CardControllerTests(TaskrWebApplicationFactory factory) : IClassFix
 
         updatedCard2!.SwimlaneId.Should().Be(s1.Id);
         updatedCard2.Position.Should().Be(1); // card 2 should have shifted up in s1
+    }
+
+    [Fact]
+    public async Task ApplyExistingTagToCard_ReturnsCreated()
+    {
+        // Arrange
+        // Seed the user once
+        await factory.SeedTestDataAsync();
+
+        using var scope = factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<KanbanDbContext>();
+        
+        const string testUserId = "test-user-id";
+        var board = await db.Boards.Include(b => b.Tags)
+            .Include(board => board.Swimlanes)
+            .FirstOrDefaultAsync(b => b.OwnerId == testUserId);
+        Assert.NotNull(board); // Make sure the test user has a board
+        
+        var s1 = board.Swimlanes.First();
+        
+        var card1 = new Card { Title = "Card 1", SwimlaneId = s1.Id, Position = 1 };
+        db.Cards.Add(card1);
+        await db.SaveChangesAsync();
+        
+        var tag1 = new Tag { Name = "Test Tag", TagColourHexadecimal = "#dc3545" };
+        board.Tags.Add(tag1);
+        await db.SaveChangesAsync();
+        
+        // Act
+        var response = await _client.PostAsync($"Card/AssignExistingTagToCard?cardId={card1.Id}&tagId={tag1.Id}", null);
+        
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        
+        var returnedTag = await response.Content.ReadFromJsonAsync<Tag>();
+        
+        // Verify tag properties
+        returnedTag.Should().NotBeNull();
+        returnedTag.Name.Should().Be("Test Tag");
+        returnedTag.TagColourHexadecimal.Should().Be("#dc3545");
     }
 }
