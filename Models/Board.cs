@@ -19,5 +19,5 @@ public class Board
     /// <summary>
     /// A collection of tags the user has created that could be applied to cards.
     /// </summary>
-    public ICollection<Tag.Tag> Tags { get; set; } = new List<Tag.Tag>();
+    public ICollection<Tag.Tag> Tags { get; init; } = new List<Tag.Tag>();
 }

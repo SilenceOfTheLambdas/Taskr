@@ -23,7 +23,7 @@ document.addEventListener('submit', async (e) => {
         if (response.status === 201) {
             window.location.href = '/';
         } else {
-            console.error("Creation of Card failed :/", response.status);
+            console.error("Creation of Tag failed :/", response.status);
         }
     }
 });

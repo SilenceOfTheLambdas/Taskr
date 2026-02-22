@@ -87,9 +87,9 @@ body {
 
 /* Slight elevation and rounded corners */
 #settings-card {
-    z-index: 99999;
+    z-index: 1000;
     border-radius: 0.75rem;
-    bottom: 4em;
+    margin: 1rem;
 }
 
 /* Hover effect for the gear button */
@@ -102,4 +102,28 @@ body {
 #settings-card,
 #settings-toggle-open {
     transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+/*Edit Tags Panel*/
+.tags-panel {
+    z-index: 2000;
+    width: 340px;
+    max-height: 500px;
+    overflow-y: scroll;
+    bottom: 1rem;
+}
+
+.edit-tag-btn {
+    border: none;
+    margin-left: 4px;
+    background-color: transparent;
+}
+.edit-tag-btn:hover {
+    padding-left: 10px;
+    background-color: rgba(116, 116, 116, 0.12);
+}
+.edit-tag-btn:focus {
+    background-color: rgba(116, 116, 116, 0.22);
+    box-shadow: none;
+    outline: none;
 }

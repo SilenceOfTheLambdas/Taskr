@@ -6,3 +6,6 @@ riderModule.iml
 .env
 node_modules/
 package-lock.json
+
+# Stakpak session files
+.stakpak/session*

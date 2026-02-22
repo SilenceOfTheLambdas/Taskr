@@ -29,6 +29,7 @@ public class BoardService(
 
         // Check to see if the current user has a board
         var board = await dbContext.Boards
+            .Include(b => b.Tags)
             .Include(b => b.Swimlanes)
             .ThenInclude(s => s.Cards)
             .FirstOrDefaultAsync(b => b.OwnerId == user.Id);
