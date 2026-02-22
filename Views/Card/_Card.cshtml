@@ -26,10 +26,13 @@
             </ul>
         </div>
     </div>
-    <div class="card-body" style="max-height: 120px; overflow: auto;">
-        <!-- Add 'markdown-content' class -->
-        <div class="card-text text-secondary markdown-content">@card.Description</div>
-    </div>
+    @if (card.Description is { Length: >= 0 })
+    {
+        <div class="card-body" style="max-height: 120px; overflow: auto;">
+            <!-- Add 'markdown-content' class -->
+            <div class="card-text text-secondary markdown-content">@card.Description</div>
+        </div>
+    }
     <div class="card-footer">
         @foreach (var tag in card.AssignedTags)
         {
