@@ -10,8 +10,34 @@
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="container-fluid board-container">
     <partial name="_ViewBoard" model="Model"/>
+</div>
+<!-- Floating Settings Panel -->
+<div id="board-settings-panel" class="position-fixed bottom-0 end-0 m-3">
+    <!-- Collapsed trigger (shown when panel is hidden) -->
+    <button id="settings-toggle-open"
+            class="btn btn-primary rounded-circle d-none"
+            title="Board settings">
+        <i class="bi bi-gear-fill"></i>   <!-- Bootstrap Icons -->
+    </button>
+
+    <!-- Expanded card -->
+    <div id="settings-card" class="card shadow-sm" style="width: fit-content;">
+        <div class="card-body p-2 d-flex flex-row gap-2">
+            
+            <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2"
+                    type="button" id="btn-change-theme" data-bs-toggle="popover">
+                <i class="bi bi-tag"></i>
+            </button>
+
+            <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
+                    type="button" id="btn-clear-board">
+                <i class="bi bi-trash"></i>
+            </button>
+
+        </div>
+    </div>
 </div>
 </body>
 <script src="~/js/site.js"></script>
@@ -23,5 +49,4 @@
 <script src="~/js/cardDragDrop.js" type="module"></script>
 <script src="~/js/SwimlaneDragDrop.js" type="module"></script>
 <script src="~/js/markdown.js"></script>
-
 </html>

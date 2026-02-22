@@ -2,7 +2,7 @@
     var card = (Card)ViewData["Card"]!;
 }
 
-<div class="card border-light bg-dark text-light mb-3 CardDragItem--isDraggable" style="z-index: 1000;max-width: 340px;"
+<div class="card border-light bg-dark text-light mb-3 CardDragItem--isDraggable" style="z-index: auto;max-width: 340px;"
      data-card-id="@card.Id">
     <div class="card-header d-flex justify-content-between CardDragItem--handle" style="max-height: fit-content;">
         <div class="CardDragItem--handle">
@@ -31,6 +31,10 @@
         <div class="card-text text-secondary markdown-content">@card.Description</div>
     </div>
     <div class="card-footer">
+        @foreach (var tag in card.AssignedTags)
+        {
+            <button class="btn-outline-light" style="width: fit-content;background-color: @tag.TagColourHexadecimal">@tag.Name</button>
+        }
         <p class="card-text"><small class="text-muted">Created @card.CreatedAt.ToShortDateString()</small></p>
     </div>
 </div>

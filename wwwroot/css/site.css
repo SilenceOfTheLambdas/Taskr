@@ -30,6 +30,28 @@ body {
     text-align: start;
 }
 
+.board-container {
+    max-height: 86vh;
+}
+
+.SwimlaneContainer {
+    max-height: 86vh;
+    margin-top: 10px;
+    height: auto;
+}
+
+.swimlane-card-container {
+    max-height: 86vh;
+    overflow-y: scroll;
+}
+
+.h-100 {
+    height: fit-content !important;
+}
+.pb-3 {
+    padding-bottom: 2rem !important;
+}
+
 /* Adding white border around QR code to fix scanning issues in Authenticator apps. */
 #qrCode {
     background-color: white;
@@ -43,14 +65,21 @@ body {
     display: block;
 }
 
-/*.markdown-preview {*/
-/*    min-height: 550px;*/
-/*    max-height: 550px;*/
-/*    overflow-y: auto;*/
-/*}*/
+/* Slight elevation and rounded corners */
+#settings-card {
+    z-index: 99999;
+    border-radius: 0.75rem;
+    bottom: 4em;
+}
 
-/*.markdown-input {*/
-/*    min-height: 550px;*/
-/*    max-height: 550px;*/
-/*    overflow-y: auto;*/
-/*}*/
+/* Hover effect for the gear button */
+#settings-toggle-open:hover {
+    background-color: #0d6efd; /* Bootstrap primary */
+    transform: scale(1.08);
+}
+
+/* Smooth transition when showing/hiding */
+#settings-card,
+#settings-toggle-open {
+    transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+}

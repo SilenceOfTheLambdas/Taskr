@@ -1,13 +1,13 @@
 @model Board
 
 <div class="row flex-nowrap g-4 pb-3 SwimlaneContainer"
-     style="width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden;">
+     style="width: 100%; overflow-x: auto; overflow-y: hidden;">
 
     @foreach (var swimlane in Model.Swimlanes.OrderBy(s => s.Position))
     {
         <div class="col-10 col-sm-6 col-md-4 col-lg-3 SwimlaneItem--isDraggable"
-             style="min-width: 380px; max-width: 380px; height: 100%;" data-swimlane-id="@swimlane.Id">
-            <div class="card h-100 text-bg-dark">
+             style="min-width: 380px; max-width: 380px;" data-swimlane-id="@swimlane.Id">
+            <div class="card h-100 text-bg-dark" style="max-height: 100%;">
                 <div class="card-header d-flex justify-content-between SwimlaneItem--handle">
                     <div class="d-flex align-items-center">
                         <h5 class="text-break" id="swimlane-title-@swimlane.Id" autofocus>@swimlane.Name</h5>
@@ -26,7 +26,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body swimlane-card-container">
                     <div class="card-body card-container CardDragDropContainer" data-swimlane-id="@swimlane.Id">
                         @foreach (var card in swimlane.Cards.OrderBy(c => c.Position))
                         {
@@ -46,8 +46,7 @@
             </div>
         </div>
         <partial name="../Card/_Create"
-                 view-data='@new ViewDataDictionary(ViewData) {
-                                                                                                 {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }'/>
+                 view-data='@new ViewDataDictionary(ViewData) { {"SwimlaneId", swimlane.Id}, { "SwimlaneName", swimlane.Name } }'/>
         <partial name="../Swimlane/_DeleteSwimlane"
                  view-data='@new ViewDataDictionary(ViewData) { { "SwimlaneId", swimlane.Id }, { "SwimlaneName", swimlane.Name } }'/>
     }
